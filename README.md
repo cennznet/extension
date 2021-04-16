@@ -1,10 +1,12 @@
-[![polkadotjs](https://img.shields.io/badge/polkadot-js-orange?style=flat-square)](https://polkadot.js.org)
+[![polkadotjs](https://img.shields.io/badge/cennznet-orange?style=flat-square)](https://polkadot.js.org)
 ![license](https://img.shields.io/badge/License-Apache%202.0-blue?logo=apache&style=flat-square)
-[![npm](https://img.shields.io/npm/v/@polkadot/extension?logo=npm&style=flat-square)](https://www.npmjs.com/package/@polkadot/extension)
-[![beta](https://img.shields.io/npm/v/@polkadot/extension/beta?label=beta&logo=npm&style=flat-square)](https://www.npmjs.com/package/@polkadot/extension)
-[![maintainability](https://img.shields.io/codeclimate/maintainability-percentage/polkadot-js/extension?logo=code-climate&style=flat-square)](https://codeclimate.com/github/polkadot-js/extension)
+[![npm](https://img.shields.io/npm/v/@polkadot/extension?logo=npm&style=flat-square)](https://www.npmjs.com/package/@cennznet/extension)
+[![beta](https://img.shields.io/npm/v/@polkadot/extension/beta?label=beta&logo=npm&style=flat-square)](https://www.npmjs.com/package/@cennznet/extension)
+[![maintainability](https://img.shields.io/codeclimate/maintainability-percentage/cennznet/extension?logo=code-climate&style=flat-square)](https://codeclimate.com/github/cennznet/extension)
 
-# ![polkadot{.js} extension](docs/logo.jpg)
+# ![CENNZnet extension](docs/logo.jpg)
+
+Note: this is a fork of the awesome @polkadot/extension intended to provide a more integrated experience on CENNZnet.  
 
 A very simple scaffolding browser extension that injects a [@polkadot/api](https://github.com/polkadot-js/api) Signer into a page, along with any associated accounts, allowing for use by any dapp. This is an extensible POC implementation of a Polkadot/Substrate browser signer.
 
@@ -13,12 +15,12 @@ As it stands, it does one thing: it _only_ manages accounts and allows the signi
 ## Installation
 
 - On Chrome, install via [Chrome web store](https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd)
-- On Firefox, install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/polkadot-js-extension/)
+- On Firefox, install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/cennznet-extension/)
 
 ![interface screenshots](docs/extension-overview.png)
 
 ## Documentation and examples
-Find out more about how to use the extension as a Dapp developper, cookbook, as well as answers to most frequent questions in the [Polkadot-js extension docuementation](https://polkadot.js.org/docs/extension/)
+Find out more about how to use the extension as a Dapp developper, cookbook, as well as answers to most frequent questions in the [cennznet extension docuementation](https://polkadot.js.org/docs/extension/)
 
 ## Development version
 
@@ -38,7 +40,7 @@ Steps to build the extension and view your changes in a browser:
     - if developing, after making changes - reload the extension
 3. When visiting `https://polkadot.js.org/apps/` it will inject the extension
 
-Once added, you can create an account (via a generated seed) or import via an existing seed. The [apps UI](https://github.com/polkadot-js/apps/), when loaded, will show these accounts as `<account name> (extension)`
+Once added, you can create an account (via a generated seed) or import via an existing seed. The [apps UI](https://github.com/cennznet/ui/), when loaded, will show these accounts as `<account name> (extension)`
 
 ## Development
 
@@ -53,9 +55,9 @@ The repo is split into a number of packages -
 
 The actual in-depth technical breakdown is given in the next section for any dapp developer wishing to work with the raw objects injected into the window. However, convenience wrappers are provided that allows for any dapp to use this extension (or any other extension that conforms to the interface) without having to manage any additional info.
 
-The documentation for Dapp development is available [in the polkadot-js doc](https://polkadot.js.org/docs/extension).
+The documentation for Dapp development is available [in the cennznet doc](https://polkadot.js.org/docs/extension).
 
-This approach is used to support multiple external signers in for instance [apps](https://github.com/polkadot-js/apps/). You can read more about the convenience wrapper [@polkadot/extension-dapp](packages/extension-dapp/) along with usage samples.
+This approach is used to support multiple external signers in for instance [apps](https://github.com/cennznet/ui/). You can read more about the convenience wrapper [@polkadot/extension-dapp](packages/extension-dapp/) along with usage samples.
 
 ## API interface
 
@@ -73,7 +75,7 @@ interface Injected {
   readonly accounts: Accounts;
   // the standard Signer interface for the API, as detailed below
   readonly signer: Signer;
-  // not injected as of yet, subscribable provider for polkadot-js API injection,
+  // not injected as of yet, subscribable provider for cennznet API injection,
   // this can be passed to the API itself upon construction in the dapp
   // readonly provider?: Provider
 }
@@ -98,21 +100,21 @@ interface Accounts {
 // a signer that communicates with the extension via sendMessage
 interface Signer extends SignerInterface {
   // no specific signer extensions, exposes the `sign` interface for use by
-  // the polkadot-js API, confirming the Signer interface for this API
+  // the cennznet API, confirming the Signer interface for this API
 }
 ```
 
 ## Injection information
 
-The information contained in this section may change and evolve. It is therefore recommended that all access is done via the [@polkadot/extension-dapp](packages/extension-dapp/) (for dapps) and [extension-inject](packages/extension-inject/) (for extensions) packages, which removes the need to work with the lower-level targets.
+The information contained in this section may change and evolve. It is therefore recommended that all access is done via the [@cennznet/extension-dapp](packages/extension-dapp/) (for dapps) and [extension-inject](packages/extension-inject/) (for extensions) packages, which removes the need to work with the lower-level targets.
 
 The extension injects `injectedWeb3` into the global `window` object, exposing the following: (This is meant to be generic across extensions, allowing any dapp to utilize multiple signers, and pull accounts from multiples, as they are available.)
 
 ```js
 window.injectedWeb3 = {
   // this is the name for this extension, there could be multiples injected,
-  // each with their own keys, here `polkadot-js` is for this extension
-  'polkadot-js': {
+  // each with their own keys, here `cennznet` is for this extension
+  'cennznet': {
     // semver for the package
     version: '0.1.0',
 
@@ -128,7 +130,7 @@ window.injectedWeb3 = {
 
 ### Using the mnemonic and password from the extension
 
-When you create a keypair via the extension, it supplies a 12-word mnemonic seed and asks you to create a password. This password only encrypts the private key on disk so that the password is required to spend funds in `polkadot-js/apps` or to import the account from backup. The password does not protect the mnemonic phrase. That is, if an attacker were to acquire the mnemonic phrase, they would be able to use it to spend funds without the password.
+When you create a keypair via the extension, it supplies a 12-word mnemonic seed and asks you to create a password. This password only encrypts the private key on disk so that the password is required to spend funds in `cennznet/apps` or to import the account from backup. The password does not protect the mnemonic phrase. That is, if an attacker were to acquire the mnemonic phrase, they would be able to use it to spend funds without the password.
 
 ### Importing mnemonics from other key generation utilities
 

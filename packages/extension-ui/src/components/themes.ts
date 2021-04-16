@@ -39,7 +39,7 @@ const darkTheme = {
   lineHeight: '26px',
   parentLabelColor: '#4A7463',
   popupBackground: '#38393F',
-  primaryColor: '#FF7D01',
+  primaryColor: 'rgb(17, 48, 255)',
   readonlyInputBackground: '#1A1B20',
   subTextColor: '#DDD',
   textColor: '#FFFFFF',

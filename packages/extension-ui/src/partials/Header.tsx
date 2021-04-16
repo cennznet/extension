@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import logo from '../assets/pjs.svg';
+import logo from '../assets/cennz.svg';
 import Link from '../components/Link';
 import useOutsideClick from '../hooks/useOutsideClick';
 import MenuAdd from './MenuAdd';
@@ -71,7 +71,7 @@ function Header ({ children, className = '', showAdd, showBackArrow, showSetting
               />
             )
           }
-          <span className='logoText'>{text || 'polkadot{.js}'}</span>
+          <span className='logoText'>{text || 'CENNZnet'}</span>
         </div>
         <div className='popupMenus'>
           {showAdd && (
