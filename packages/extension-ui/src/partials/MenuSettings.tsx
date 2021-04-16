@@ -25,9 +25,8 @@ interface Props extends ThemeProps {
   reference: React.MutableRefObject<null>;
 }
 
-const prefixOptions = settings.availablePrefixes
-  .filter(({ value }) => value !== -1)
-  .map(({ text, value }): Option => ({ text, value: `${value}` }));
+// CENNZnet only for now
+const prefixOptions: Option[] = [({ text: 'CENNZnet', value: '42' }) as Option];
 
 function MenuSettings ({ className, reference }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();

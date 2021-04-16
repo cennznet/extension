@@ -15,7 +15,7 @@ const darkTheme = {
   boxMargin: '0.75rem 0',
   boxPadding: '0 0.25rem',
   boxShadow: 'rgba(0, 0, 0, 0.86)',
-  buttonBackground: '#E86F00',
+  buttonBackground: 'rgb(52, 82, 235)',
   buttonBackgroundDanger: '#AF1111',
   buttonBackgroundDangerHover: '#D93B3B',
   buttonBackgroundHover: '#ED9329',

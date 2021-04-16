@@ -97,7 +97,7 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   const { t } = useTranslation();
   const { accounts } = useContext(AccountContext);
   const settings = useContext(SettingsContext);
-  const [{ account, formatted, genesisHash: recodedGenesis, prefix, type }, setRecoded] = useState<Recoded>(defaultRecoded);
+  const [{ account, formatted, genesisHash: recodedGenesis, prefix }, setRecoded] = useState<Recoded>(defaultRecoded);
   const chain = useMetadata(genesisHash || recodedGenesis, true);
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [moveMenuUp, setIsMovedMenu] = useState(false);
@@ -137,13 +137,7 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
     setShowActionsMenu(false);
   }, [toggleActions]);
 
-  const theme = (
-    chain?.icon
-      ? chain.icon
-      : type === 'ethereum'
-        ? 'ethereum'
-        : 'polkadot'
-  ) as IconTheme;
+  const theme = 'beachball' as IconTheme;
 
   const _onClick = useCallback((): void => setShowActionsMenu(!showActionsMenu), [showActionsMenu]);
   const _onCopy = useCallback((): void => show(t('Copied')), [show, t]);
