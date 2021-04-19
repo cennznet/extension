@@ -32,7 +32,7 @@ redirectIfPhishing().then((gotRedirected) => {
 
 function inject () {
   injectExtension(enable, {
-    name: 'polkadot-js',
+    name: 'cennznet-extension',
     version: process.env.PKG_VERSION as string
   });
 }
