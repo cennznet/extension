@@ -7,12 +7,14 @@ import type { Chain } from './types';
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';
 import { base64Decode } from '@polkadot/util-crypto';
-
+import config from './config';
 // imports chain details, generally metadata. For the generation of these,
 // inside the api, run `yarn chain:info --ws <url>`
 
+const CENNZNetChain: MetadataDef[] = config.CENNZNetChain;
+// Initialise the metadata definition with CENNZNet chains
 const definitions = new Map<string, MetadataDef>(
-  // [kusama].map((def) => [def.genesisHash, def])
+  CENNZNetChain.map((def) => [def.genesisHash, def])
 );
 
 const expanded = new Map<string, Chain>();
