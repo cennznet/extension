@@ -165,8 +165,8 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
         def.metaCalls = metaDataInfo.metaCalls;
         const oldTypes = def.types;
         def.types = {...oldTypes, ...newTypes};
+        await sendMessage('pri(metadata.set)', def);
       }
-      await sendMessage('pri(metadata.set)', def);
     }
     return metadataExpand(def, isPartial);
   } else if (isPartial) {
