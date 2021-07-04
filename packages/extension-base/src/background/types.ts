@@ -98,6 +98,7 @@ export interface RequestSignatures {
   'pri(json.account.info)': [KeyringPair$Json, ResponseJsonGetAccountInfo];
   'pri(metadata.approve)': [RequestMetadataApprove, boolean];
   'pri(metadata.get)': [string | null, MetadataDef | null];
+  'pri(metadata.set)': [MetadataDef, MetadataDef | null];
   'pri(metadata.reject)': [RequestMetadataReject, boolean];
   'pri(metadata.requests)': [RequestMetadataSubscribe, boolean, MetadataRequest[]];
   'pri(metadata.list)': [null, MetadataDef[]];

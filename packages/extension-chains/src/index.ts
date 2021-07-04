@@ -17,6 +17,48 @@ const definitions = new Map<string, MetadataDef>(
   CENNZNetChain.map((def) => [def.genesisHash, def])
 );
 
+export function getLatestMetaFromServer(genesisHashExpected: string) {
+  const xmlHttp = new XMLHttpRequest();
+//xmlHttp.open( "GET", "https://raw.githubusercontent.com/cennznet/api.js/master/packages/api/src/staticMetadata.ts", false ); // false for synchronous request
+  xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/test1/packages/api/src/staticMetadata.ts", false);
+  xmlHttp.send( null );
+  let response = xmlHttp.responseText;
+// Replace all the unwanted stuff and make response a json object
+  response = response.replace('export default ','');
+  response = response.replace(',\n\};','}');
+  const searchRegExp = /\'/g;
+  const replaceWith = '"';
+  response = response.replace(searchRegExp, replaceWith);
+  const staticMetadata = JSON.parse(response);
+  const key = Object.keys(staticMetadata).filter(v => v.includes(genesisHashExpected));
+  if (!key[0]) {
+    return null;
+  }
+  const [, specVersion] = key[0].split('-');
+  const metaInHex = staticMetadata[key[0]];
+  const registry = new TypeRegistry();
+  const metaFetched = new Metadata(registry, metaInHex);
+  const metaCalls = Buffer.from(metaFetched.asCallsOnly.toU8a()).toString('base64');
+  return {metaCalls, specVersion: parseInt(specVersion)};
+}
+
+
+export function getLatestTypesFromServer() {
+  try {
+    const xmlHttp = new XMLHttpRequest();
+//xmlHttp.open( "GET", "https://raw.githubusercontent.com/cennznet/api.js/master/packages/types/src/runtimeModuleTypes.ts", false ); // false for synchronous request
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/test1/packages/types/src/runtimeModuleTypes.ts", false);
+    xmlHttp.send(null);
+    let response = xmlHttp.responseText;
+// Replace all the unwanted stuff and make response a json object
+    response = response.replace('export default ', '');
+    const typesAdded = JSON.parse(response);
+    return typesAdded;
+  } catch (e) {
+    return {};
+  }
+}
+
 const expanded = new Map<string, Chain>();
 
 export function metadataExpand (definition: MetadataDef, isPartial = false): Chain {

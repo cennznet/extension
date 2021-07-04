@@ -279,8 +279,14 @@ const azalea = {
   "specVersion": 40,
   ...commomTypes
 } as unknown as MetadataDef;
+const develop = {
+  "chain": "Development",
+  "genesisHash": "0x43f11d7b7405d24e529d7f7b0ff65154e73eebf0f34908d936b0be3b68429daa",
+  "specVersion": 39,
+  ...commomTypes
+} as unknown as MetadataDef;
 const defaultConfig = {
-  CENNZNetChain: [nikau, rata, azalea]
+  CENNZNetChain: [nikau, rata, azalea, develop]
 };
 
 export default defaultConfig;
