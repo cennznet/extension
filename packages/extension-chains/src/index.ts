@@ -23,8 +23,7 @@ const definitions = new Map<string, MetadataDef>(
 export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFetched | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    //xmlHttp.open( "GET", "https://raw.githubusercontent.com/cennznet/api.js/master/packages/api/src/staticMetadata.ts", false ); // false for synchronous request
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/test1/extension-releases/metadata.json", false);
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/metadata.json", false);
     xmlHttp.send(null);
     let response = xmlHttp.responseText;
     const metadataDetails = JSON.parse(response);
@@ -52,8 +51,7 @@ export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFe
 export function getLatestTypesFromServer(): RuntimeTypes | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    //xmlHttp.open( "GET", "https://raw.githubusercontent.com/cennznet/api.js/master/packages/api/src/staticMetadata.ts", false ); // false for synchronous request
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/test1/extension-releases/runtimeModuleTypes.json", false);
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/runtimeModuleTypes.json", false);
     xmlHttp.send(null);
     let response = xmlHttp.responseText;
     const additionalTypes = JSON.parse(response);
