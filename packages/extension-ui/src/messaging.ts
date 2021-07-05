@@ -9,7 +9,7 @@ import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
 import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
-import {getLatestMetaFromServer, metadataExpand} from '@polkadot/extension-chains';
+import {getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand} from '@polkadot/extension-chains';
 import chrome from '@polkadot/extension-inject/chrome';
 import { MetadataDef } from '@polkadot/extension-inject/types';
 
@@ -157,14 +157,19 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
     const specVersionInState = def.specVersion;
     // when spec version is not the latest, fetch latest and updated state with latest metadata
     if (specVersion && !specVersion.eqn(specVersionInState)) {
-      console.log('Spec versions are different - update meta')
       const metaDataInfo = getLatestMetaFromServer(genesisHash);
+      const additionalTypes = getLatestTypesFromServer();
       if (metaDataInfo) {
         def.specVersion = metaDataInfo.specVersion;
         def.metaCalls = metaDataInfo.metaCalls;
-        const newTypes = metaDataInfo.types;
+        const newTypes = additionalTypes ? additionalTypes.types : {};
         const oldTypes = def.types;
         def.types = {...oldTypes, ...newTypes};
+        const newUserExtensions = additionalTypes ? additionalTypes.userExtensions : undefined;
+        if (newUserExtensions) {
+          const oldUserExtensions = def.userExtensions;
+          def.userExtensions = {...oldUserExtensions, ...newUserExtensions};
+        }
         await sendMessage('pri(metadata.set)', def);
       }
     }

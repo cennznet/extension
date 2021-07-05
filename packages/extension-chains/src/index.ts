@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { MetadataDef } from '@polkadot/extension-inject/types';
-import type { Chain } from './types';
+import type {Chain, MetadataFetched, RuntimeTypes} from './types';
 
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';
@@ -17,7 +17,10 @@ const definitions = new Map<string, MetadataDef>(
   CENNZNetChain.map((def) => [def.genesisHash, def])
 );
 
-export function getLatestMetaFromServer(genesisHashExpected: string) {
+/** when metadata definition stored in extension is outdated
+ * get the definition for @cennznet/api/extension-releases
+ * for cennznet specific chains **/
+export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFetched | null {
   try {
     const xmlHttp = new XMLHttpRequest();
     //xmlHttp.open( "GET", "https://raw.githubusercontent.com/cennznet/api.js/master/packages/api/src/staticMetadata.ts", false ); // false for synchronous request
@@ -26,7 +29,6 @@ export function getLatestMetaFromServer(genesisHashExpected: string) {
     let response = xmlHttp.responseText;
     const metadataDetails = JSON.parse(response);
     const metaCallsList = metadataDetails?.metaCalls;
-    const types = metadataDetails ? metadataDetails.types : {};
     if (metaCallsList) {
       // metaCalls is { genesisHash-specVersion: metaCalls }
       const key = Object.keys(metaCallsList).filter(v => v.includes(genesisHashExpected));
@@ -35,7 +37,30 @@ export function getLatestMetaFromServer(genesisHashExpected: string) {
       }
       const [, specVersion] = key[0].split('-');
       const metaCalls = metaCallsList[key[0]];
-      return {metaCalls, specVersion: parseInt(specVersion), types};
+      return {metaCalls, specVersion: parseInt(specVersion)};
+    }
+    return null;
+  } catch (e) {
+    console.log('Err:',e);
+    return null;
+  }
+}
+
+/** when types stored in extension is outdated
+ * get the types for @cennznet/api/extension-releases
+ * for cennznet specific chains **/
+export function getLatestTypesFromServer(): RuntimeTypes | null {
+  try {
+    const xmlHttp = new XMLHttpRequest();
+    //xmlHttp.open( "GET", "https://raw.githubusercontent.com/cennznet/api.js/master/packages/api/src/staticMetadata.ts", false ); // false for synchronous request
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/test1/extension-releases/runtimeModuleTypes.json", false);
+    xmlHttp.send(null);
+    let response = xmlHttp.responseText;
+    const additionalTypes = JSON.parse(response);
+    if (additionalTypes) {
+      const types = additionalTypes.types;
+      const userExtensions = additionalTypes.userExtensions;
+      return {types, userExtensions};
     }
     return null;
   } catch (e) {
