@@ -9,13 +9,13 @@ import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
 import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
-import {getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand} from '@polkadot/extension-chains';
+import {getLatestMetaFromServer, metadataExpand} from '@polkadot/extension-chains';
 import chrome from '@polkadot/extension-inject/chrome';
 import { MetadataDef } from '@polkadot/extension-inject/types';
 
 import allChains from './util/chains';
 import { getSavedMeta, setSavedMeta } from './MetadataCache';
-import BN from "bn.js";
+import BN from 'bn.js';
 
 interface Handler {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -159,10 +159,10 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
     if (specVersion && !specVersion.eqn(specVersionInState)) {
       console.log('Spec versions are different - update meta')
       const metaDataInfo = getLatestMetaFromServer(genesisHash);
-      const newTypes = getLatestTypesFromServer();
       if (metaDataInfo) {
         def.specVersion = metaDataInfo.specVersion;
         def.metaCalls = metaDataInfo.metaCalls;
+        const newTypes = metaDataInfo.types;
         const oldTypes = def.types;
         def.types = {...oldTypes, ...newTypes};
         await sendMessage('pri(metadata.set)', def);
