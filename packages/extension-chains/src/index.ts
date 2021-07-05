@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { MetadataDef } from '@polkadot/extension-inject/types';
-import type {Chain, MetadataFetched, RuntimeTypes} from './types';
+import type { Chain, MetadataFetched, RuntimeTypes } from './types';
 
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';

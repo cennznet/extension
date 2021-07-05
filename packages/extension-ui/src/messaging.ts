@@ -9,7 +9,7 @@ import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
 import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
-import {getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand} from '@polkadot/extension-chains';
+import { getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand } from '@polkadot/extension-chains';
 import chrome from '@polkadot/extension-inject/chrome';
 import { MetadataDef } from '@polkadot/extension-inject/types';
 
