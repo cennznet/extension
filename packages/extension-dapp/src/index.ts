@@ -75,7 +75,7 @@ export function web3Enable (originName: string): Promise<InjectedExtension[]> {
                 ext.accounts.get().then(cb).catch(console.error);
 
                 return (): void => {
-                  // no ubsubscribe needed, this is a single-shot
+                  // no unsubscribe needed, this is a single-shot
                 };
               };
             }
@@ -97,7 +97,7 @@ export function web3Enable (originName: string): Promise<InjectedExtension[]> {
   return web3EnablePromise;
 }
 
-// retrieve all the accounts accross all providers
+// retrieve all the accounts across all providers
 export async function web3Accounts ({ ss58Format }: Web3AccountsOptions = {}): Promise<InjectedAccountWithMeta[]> {
   if (!web3EnablePromise) {
     return throwError('web3Accounts');
@@ -112,6 +112,7 @@ export async function web3Accounts ({ ss58Format }: Web3AccountsOptions = {}): P
 
         return mapAccounts(source, list, ss58Format);
       } catch (error) {
+        console.error('web3accounts failed:', error);
         // cannot handle this one
         return [];
       }
