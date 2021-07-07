@@ -158,17 +158,13 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
     // when spec version is not the latest, fetch latest and updated state with latest metadata
     if (specVersion && !specVersion.eqn(specVersionInState)) {
       const metaDataInfo = getLatestMetaFromServer(genesisHash);
-      const additionalTypes = getLatestTypesFromServer();
+      const additionalTypes = getLatestTypesFromServer(genesisHash);
       if (metaDataInfo) {
         def.specVersion = metaDataInfo.specVersion;
         def.metaCalls = metaDataInfo.metaCalls;
-        const newTypes = additionalTypes ? additionalTypes.types : {};
-        const oldTypes = def.types;
-        def.types = {...oldTypes, ...newTypes};
-        const newUserExtensions = additionalTypes ? additionalTypes.userExtensions : undefined;
-        if (newUserExtensions) {
-          const oldUserExtensions = def.userExtensions;
-          def.userExtensions = {...oldUserExtensions, ...newUserExtensions};
+        if (additionalTypes) {
+          def.types = additionalTypes.types;
+          def.userExtensions = additionalTypes.userExtensions;
         }
         await sendMessage('pri(metadata.set)', def);
       }

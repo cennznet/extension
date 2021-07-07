@@ -281,7 +281,7 @@ const azalea = {
 } as unknown as MetadataDef;
 const develop = {
   "chain": "Development",
-  "genesisHash": "0x43f11d7b7405d24e529d7f7b0ff65154e73eebf0f34908d936b0be3b68429daa",
+  "genesisHash": "0xba29ccef64182e17dee0f9d8bbaddc69e439acdc9409149e5c409d696c14232e",
   "specVersion": 40,
   ...commomTypes
 } as unknown as MetadataDef;

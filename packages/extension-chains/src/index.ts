@@ -23,7 +23,7 @@ const definitions = new Map<string, MetadataDef>(
 export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFetched | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/metadata.json", false);
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/extension-releases-setup/extension-releases/metadata.json", false);
     xmlHttp.send(null);
     let response = xmlHttp.responseText;
     const metadataDetails = JSON.parse(response);
@@ -48,16 +48,17 @@ export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFe
 /** when types stored in extension is outdated
  * get the types for @cennznet/api/extension-releases
  * for cennznet specific chains **/
-export function getLatestTypesFromServer(): RuntimeTypes | null {
+export function getLatestTypesFromServer(genesisHashExpected: string): RuntimeTypes | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/runtimeModuleTypes.json", false);
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/extension-releases-setup/extension-releases/runtimeModuleTypes.json", false);
     xmlHttp.send(null);
     let response = xmlHttp.responseText;
     const additionalTypes = JSON.parse(response);
-    if (additionalTypes) {
-      const types = additionalTypes.types;
-      const userExtensions = additionalTypes.userExtensions;
+    const typesForCurrentChain = additionalTypes[genesisHashExpected];
+    if (typesForCurrentChain) {
+      const types = typesForCurrentChain.types;
+      const userExtensions = typesForCurrentChain.userExtensions;
       return {types, userExtensions};
     }
     return null;
