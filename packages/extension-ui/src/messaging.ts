@@ -9,12 +9,13 @@ import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
 import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
-import { metadataExpand } from '@polkadot/extension-chains';
+import { getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand } from '@polkadot/extension-chains';
 import chrome from '@polkadot/extension-inject/chrome';
 import { MetadataDef } from '@polkadot/extension-inject/types';
 
 import allChains from './util/chains';
 import { getSavedMeta, setSavedMeta } from './MetadataCache';
+import BN from 'bn.js';
 
 interface Handler {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -139,7 +140,7 @@ export async function getAllMetatdata (): Promise<MetadataDef[]> {
   return sendMessage('pri(metadata.list)');
 }
 
-export async function getMetadata (genesisHash?: string | null, isPartial = false): Promise<Chain | null> {
+export async function getMetadata (genesisHash?: string | null, specVersion?: BN | null, isPartial = false): Promise<Chain | null> {
   if (!genesisHash) {
     return null;
   }
@@ -152,8 +153,22 @@ export async function getMetadata (genesisHash?: string | null, isPartial = fals
   }
 
   const def = await request;
-
   if (def) {
+    const specVersionInState = def.specVersion;
+    // when spec version is not the latest, fetch latest and updated state with latest metadata
+    if (specVersion && !specVersion.eqn(specVersionInState)) {
+      const metaDataInfo = getLatestMetaFromServer(genesisHash);
+      const additionalTypes = getLatestTypesFromServer(genesisHash);
+      if (metaDataInfo) {
+        def.specVersion = metaDataInfo.specVersion;
+        def.metaCalls = metaDataInfo.metaCalls;
+        if (additionalTypes) {
+          def.types = additionalTypes.types;
+          def.userExtensions = additionalTypes.userExtensions;
+        }
+        await sendMessage('pri(metadata.set)', def);
+      }
+    }
     return metadataExpand(def, isPartial);
   } else if (isPartial) {
     const chain = allChains.find((chain) => chain.genesisHash === genesisHash);

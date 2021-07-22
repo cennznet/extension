@@ -98,7 +98,7 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   const { accounts } = useContext(AccountContext);
   const settings = useContext(SettingsContext);
   const [{ account, formatted, genesisHash: recodedGenesis, prefix }, setRecoded] = useState<Recoded>(defaultRecoded);
-  const chain = useMetadata(genesisHash || recodedGenesis, true);
+  const chain = useMetadata(genesisHash || recodedGenesis, null, true);
   const [showActionsMenu, setShowActionsMenu] = useState(false);
   const [moveMenuUp, setIsMovedMenu] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);

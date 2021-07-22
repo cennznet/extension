@@ -5,7 +5,48 @@ import type { MetadataDef } from '@polkadot/extension-inject/types';
 import type { KeyringPair, KeyringPair$Json, KeyringPair$Meta } from '@polkadot/keyring/types';
 import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { SubjectInfo } from '@polkadot/ui-keyring/observable/types';
-import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MetadataRequest, RequestAccountBatchExport, RequestAccountChangePassword, RequestAccountCreateExternal, RequestAccountCreateHardware, RequestAccountCreateSuri, RequestAccountEdit, RequestAccountExport, RequestAccountForget, RequestAccountShow, RequestAccountTie, RequestAccountValidate, RequestAuthorizeApprove, RequestAuthorizeReject, RequestBatchRestore, RequestDeriveCreate, RequestDeriveValidate, RequestJsonRestore, RequestMetadataApprove, RequestMetadataReject, RequestSeedCreate, RequestSeedValidate, RequestSigningApprovePassword, RequestSigningApproveSignature, RequestSigningCancel, RequestSigningIsLocked, RequestTypes, ResponseAccountExport, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSeedCreate, ResponseSeedValidate, ResponseSigningIsLocked, ResponseType, SigningRequest } from '../types';
+import type {
+  AccountJson,
+  AllowedPath,
+  AuthorizeRequest,
+  MessageTypes,
+  MetadataRequest,
+  RequestAccountBatchExport,
+  RequestAccountChangePassword,
+  RequestAccountCreateExternal,
+  RequestAccountCreateHardware,
+  RequestAccountCreateSuri,
+  RequestAccountEdit,
+  RequestAccountExport,
+  RequestAccountForget,
+  RequestAccountShow,
+  RequestAccountTie,
+  RequestAccountValidate,
+  RequestAuthorizeApprove,
+  RequestAuthorizeReject,
+  RequestBatchRestore,
+  RequestDeriveCreate,
+  RequestDeriveValidate,
+  RequestJsonRestore,
+  RequestMetadataApprove,
+  RequestMetadataReject,
+  RequestSeedCreate,
+  RequestSeedValidate,
+  RequestSigningApprovePassword,
+  RequestSigningApproveSignature,
+  RequestSigningCancel,
+  RequestSigningIsLocked,
+  RequestTypes,
+  ResponseAccountExport,
+  ResponseAuthorizeList,
+  ResponseDeriveValidate,
+  ResponseJsonGetAccountInfo,
+  ResponseSeedCreate,
+  ResponseSeedValidate,
+  ResponseSigningIsLocked,
+  ResponseType,
+  SigningRequest
+} from '../types';
 
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@polkadot/extension-base/defaults';
 import chrome from '@polkadot/extension-inject/chrome';
@@ -234,6 +275,10 @@ export default class Extension {
 
   private metadataGet (genesisHash: string | null): MetadataDef | null {
     return this.#state.knownMetadata.find((result) => result.genesisHash === genesisHash) || null;
+  }
+
+  private metadataSet (def: MetadataDef) {
+    this.#state.saveMetadata(def);
   }
 
   private metadataList (): MetadataDef[] {
@@ -559,6 +604,9 @@ export default class Extension {
 
       case 'pri(metadata.get)':
         return this.metadataGet(request as string);
+
+      case 'pri(metadata.set)':
+        return this.metadataSet(request as MetadataDef);
 
       case 'pri(metadata.list)':
         return this.metadataList();

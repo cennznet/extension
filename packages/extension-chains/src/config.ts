@@ -263,7 +263,7 @@ const commomTypes = {"color": "#191a2e",
 };
 const nikau = {
   "chain": "CENNZnet Nikau",
-  "genesisHash": "0x4d9337089848aa1aac7f6db23118c3844cfd99972c394521f62341ef1b657612",
+  "genesisHash": "0xc65170707265757d8a1fb8e039062286b8f0092f2984f5938588bd8e0f21ca2e",
   "specVersion": 40,
   ...commomTypes
 } as unknown as MetadataDef;
@@ -279,8 +279,14 @@ const azalea = {
   "specVersion": 40,
   ...commomTypes
 } as unknown as MetadataDef;
+const develop = {
+  "chain": "Development",
+  "genesisHash": "0xba29ccef64182e17dee0f9d8bbaddc69e439acdc9409149e5c409d696c14232e",
+  "specVersion": 40,
+  ...commomTypes
+} as unknown as MetadataDef;
 const defaultConfig = {
-  CENNZNetChain: [nikau, rata, azalea]
+  CENNZNetChain: [nikau, rata, azalea, develop]
 };
 
 export default defaultConfig;
