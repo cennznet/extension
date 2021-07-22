@@ -23,7 +23,7 @@ const definitions = new Map<string, MetadataDef>(
 export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFetched | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/extension-releases-setup/extension-releases/metaCalls.json", false);
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/metaCalls.json", false);
     xmlHttp.send(null);
     let response = xmlHttp.responseText;
     const metadataDetails = JSON.parse(response);
@@ -51,7 +51,7 @@ export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFe
 export function getLatestTypesFromServer(genesisHashExpected: string): RuntimeTypes | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/extension-releases-setup/extension-releases/runtimeModuleTypes.json", false);
+    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/runtimeModuleTypes.json", false);
     xmlHttp.send(null);
     let response = xmlHttp.responseText;
     const additionalTypes = JSON.parse(response);
