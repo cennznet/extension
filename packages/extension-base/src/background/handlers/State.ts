@@ -8,7 +8,7 @@ import type { AccountJson, AuthorizeRequest, MetadataRequest, RequestAuthorizeTa
 import { BehaviorSubject } from 'rxjs';
 
 import { addMetadata, knownMetadata } from '@polkadot/extension-chains';
-import chrome from '@polkadot/extension-inject/chrome';
+import chrome, {getBrowser} from '@polkadot/extension-inject/chrome';
 import { assert } from '@polkadot/util';
 
 import { MetadataStore } from '../../stores';
@@ -60,14 +60,13 @@ interface SignRequest extends Resolver<ResponseSigning> {
 let idCounter = 0;
 
 const WINDOW_OPTS = {
-  // This is not allowed on FF, only on Chrome - disable completely
-  // focused: true,
+  focused: true,
   height: 621,
   left: 150,
   top: 150,
   type: 'popup',
-  url: chrome.extension.getURL('notification.html'),
-  width: 560
+  url: chrome.runtime.getURL('notification.html'),
+  width: 560,
 };
 
 const AUTH_URLS_KEY = 'authUrls';
@@ -164,6 +163,13 @@ export default class State {
     chrome.windows.create({ ...WINDOW_OPTS }, (window?: chrome.windows.Window): void => {
       if (window) {
         this.#windows.push(window.id);
+        const browser = getBrowser();
+        // Additional step for ff browser -
+        //(In Firefox, the top value currently is ignored for popups (bug 1271047) but can be set using browser.windows.update().)
+        if (browser === 'Firefox') {
+          const cloneWindowOptMinusURL = (({ url, type, ...o }) => o)(WINDOW_OPTS)
+          chrome.windows.update(window.id, cloneWindowOptMinusURL);
+        }
       }
     });
   }
