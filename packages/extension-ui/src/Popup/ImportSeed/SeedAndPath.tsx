@@ -9,7 +9,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { validateSeed } from '@polkadot/extension-ui/messaging';
+import { validateSeed } from '@cennznet/extension-ui/messaging';
 
 import { ButtonArea, Dropdown, InputWithLabel, NextStepButton, TextAreaWithLabel, VerticalSpace, Warning } from '../../components';
 import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';

@@ -8,18 +8,18 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@polkadot/extension": ["packages/extension/src"],
-      "@polkadot/extension/*": ["packages/extension/src/*"],
-      "@polkadot/extension-base": ["packages/extension-base/src"],
-      "@polkadot/extension-base/*": ["packages/extension-base/src/*"],
-      "@polkadot/extension-chains": ["packages/extension-chains/src"],
-      "@polkadot/extension-chains/*": ["packages/extension-chains/src/*"],
-      "@polkadot/extension-dapp": ["packages/extension-dapp/src"],
-      "@polkadot/extension-dapp/*": ["packages/extension-dapp/src/*"],
-      "@polkadot/extension-inject": ["packages/extension-inject/src"],
-      "@polkadot/extension-inject/*": ["packages/extension-inject/src/*"],
-      "@polkadot/extension-ui": ["packages/extension-ui/src"],
-      "@polkadot/extension-ui/*": ["packages/extension-ui/src/*"]
+      "@cennznet/extension": ["packages/extension/src"],
+      "@cennznet/extension/*": ["packages/extension/src/*"],
+      "@cennznet/extension-base": ["packages/extension-base/src"],
+      "@cennznet/extension-base/*": ["packages/extension-base/src/*"],
+      "@cennznet/extension-chains": ["packages/extension-chains/src"],
+      "@cennznet/extension-chains/*": ["packages/extension-chains/src/*"],
+      "@cennznet/extension-dapp": ["packages/extension-dapp/src"],
+      "@cennznet/extension-dapp/*": ["packages/extension-dapp/src/*"],
+      "@cennznet/extension-inject": ["packages/extension-inject/src"],
+      "@cennznet/extension-inject/*": ["packages/extension-inject/src/*"],
+      "@cennznet/extension-ui": ["packages/extension-ui/src"],
+      "@cennznet/extension-ui/*": ["packages/extension-ui/src/*"]
     },
     "skipLibCheck": true
   }

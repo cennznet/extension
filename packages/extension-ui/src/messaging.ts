@@ -1,17 +1,17 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@polkadot/extension-base/background/types';
-import type { Message } from '@polkadot/extension-base/types';
-import type { Chain } from '@polkadot/extension-chains/types';
+import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@cennznet/extension-base/background/types';
+import type { Message } from '@cennznet/extension-base/types';
+import type { Chain } from '@cennznet/extension-chains/types';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
 
-import { PORT_EXTENSION } from '@polkadot/extension-base/defaults';
-import { getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand } from '@polkadot/extension-chains';
-import chrome from '@polkadot/extension-inject/chrome';
-import { MetadataDef } from '@polkadot/extension-inject/types';
+import { PORT_EXTENSION } from '@cennznet/extension-base/defaults';
+import { getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand } from '@cennznet/extension-chains';
+import chrome from '@cennznet/extension-inject/chrome';
+import { MetadataDef } from '@cennznet/extension-inject/types';
 
 import allChains from './util/chains';
 import { getSavedMeta, setSavedMeta } from './MetadataCache';
