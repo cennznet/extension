@@ -19,9 +19,6 @@
     "safe-buffer": "^5.2.1",
     "typescript": "^4.2.4"
   },
-  "bin": {
-    "cennznet-dev-build-ts": "./cennznet-dev-build-ts.cjs"
-  },
   "scripts": {
     "build": "./cennznet-dev-build-ts.cjs && yarn build:zip",
     "build:extra": "yarn build:i18n && yarn build:ui",
