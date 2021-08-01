@@ -71,6 +71,12 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
           {t<string>('Derive New Account')}
         </Link>
       )}
+      <a className='menuItem'
+        href={`https://uncoverexplorer.com/account/${address}`}
+        target="_blank"
+      >
+        {t<string>('View on UNcover')}
+      </a>
       <MenuDivider />
       {!isExternal && (
         <Link
