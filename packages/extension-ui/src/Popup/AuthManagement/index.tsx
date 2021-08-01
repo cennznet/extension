@@ -6,8 +6,8 @@ import type { ThemeProps } from '../../types';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
 
-import { AuthUrlInfo, AuthUrls } from '@polkadot/extension-base/background/handlers/State';
-import { InputFilter } from '@polkadot/extension-ui/components';
+import { AuthUrlInfo, AuthUrls } from '@cennznet/extension-base/background/handlers/State';
+import { InputFilter } from '@cennznet/extension-ui/components';
 
 import useTranslation from '../../hooks/useTranslation';
 import { getAuthList, toggleAuthorization } from '../../messaging';

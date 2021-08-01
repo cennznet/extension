@@ -84,7 +84,7 @@ module.exports = (entry, alias = {}) => ({
   resolve: {
     alias: packages.reduce((alias, p) => ({
       ...alias,
-      [`@polkadot/${p}`]: path.resolve(__dirname, `../${p}/src`)
+      [`@cennznet/${p}`]: path.resolve(__dirname, `../${p}/src`)
     }), {
       ...alias,
       'react/jsx-runtime': require.resolve('react/jsx-runtime')

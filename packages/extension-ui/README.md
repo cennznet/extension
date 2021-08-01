@@ -1,3 +1,3 @@
-# @polkadot/extension-ui
+# @cennznet/extension-ui
 
-UI for the `@polkadot/extension`
+UI for the `@cennznet/extension`

@@ -6,7 +6,7 @@
 
 # ![CENNZnet extension](docs/logo.jpg)
 
-Note: this is a fork of the awesome @polkadot/extension intended to provide a more integrated experience on CENNZnet.  
+Note: this is a fork of the awesome @polkadot/extension intended to provide a more integrated experience on CENNZnet.
 
 A very simple scaffolding browser extension that injects a [@polkadot/api](https://github.com/polkadot-js/api) Signer into a page, along with any associated accounts, allowing for use by any dapp. This is an extensible POC implementation of a Polkadot/Substrate browser signer.
 
@@ -65,7 +65,7 @@ The extension injection interfaces are generic, i.e. it is designed to allow any
 
 From a dapp developer perspective, the only work needed is to include the [@polkadot/extension-dapp](packages/extension-dapp/) package and call the appropriate enabling function to retrieve all the extensions and their associated interfaces.
 
-From an extension developer perspective, the only work required is to enable the extension via the razor-thin [@polkadot/extension-inject](packages/extension-inject/) wrapper. Any dapp using the above interfaces will have access to the extension via this interface.
+From an extension developer perspective, the only work required is to enable the extension via the razor-thin [@cennznet/extension-inject](packages/extension-inject/) wrapper. Any dapp using the above interfaces will have access to the extension via this interface.
 
 When there is more than one extension, each will populate an entry via the injection interface and each will be made available to the dapp. The `Injected` interface, as returned via `enable`, contains the following information for any compliant extension -
 

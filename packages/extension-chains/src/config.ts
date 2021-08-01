@@ -1,4 +1,4 @@
-import {MetadataDef} from "@polkadot/extension-inject/types";
+import {MetadataDef} from "@cennznet/extension-inject/types";
 
 const commomTypes = {"color": "#191a2e",
   "icon": "CENNZnet",

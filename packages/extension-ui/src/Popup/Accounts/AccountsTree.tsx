@@ -1,7 +1,7 @@
 // Copyright 2019-2021 @polkadot/extension authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { AccountWithChildren } from '@polkadot/extension-base/background/types';
+import type { AccountWithChildren } from '@cennznet/extension-base/background/types';
 
 import React from 'react';
 

@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { Signer } from '@polkadot/api/types';
-import type { Injected, InjectedAccount, InjectedWindow } from '@polkadot/extension-inject/types';
+import type { Injected, InjectedAccount, InjectedWindow } from '@cennznet/extension-inject/types';
 
 // RxJs interface, only the bare-bones of what we need here
 interface Subscriber<T> {
