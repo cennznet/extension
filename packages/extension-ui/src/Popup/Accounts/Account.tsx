@@ -75,7 +75,13 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         href={`https://uncoverexplorer.com/account/${address}`}
         target="_blank"
       >
-        {t<string>('View on UNcover')}
+        {t<string>('View on UNcover (Azalea)')}
+      </a>
+      <a className='menuItem'
+         href={`https://uncoverexplorer.com/account/${address}?network=Nikau`}
+         target="_blank"
+      >
+        {t<string>('View on UNcover (Nikau)')}
       </a>
       <MenuDivider />
       {!isExternal && (
