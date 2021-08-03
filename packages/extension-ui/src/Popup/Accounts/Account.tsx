@@ -14,6 +14,7 @@ import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
 import useTranslation from '../../hooks/useTranslation';
 import { editAccount, tieAccount } from '../../messaging';
 import { Name } from '../../partials';
+import defaultConfig from "@cennznet/extension-chains/config";
 
 interface Props extends AccountJson {
   className?: string;
@@ -30,6 +31,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
   const [{ isEditing, toggleActions }, setEditing] = useState<EditState>({ isEditing: false, toggleActions: 0 });
   const [editedName, setName] = useState<string | undefined | null>(name);
   const genesisOptions = useGenesisHashOptions();
+  const nikauChain = defaultConfig.CENNZNetChain.find(blkChain => blkChain.chain === 'CENNZnet Nikau');
 
   const _onChangeGenesis = useCallback(
     (genesisHash?: string | null): void => {
@@ -72,16 +74,10 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         </Link>
       )}
       <a className='menuItem'
-        href={`https://uncoverexplorer.com/account/${address}`}
-        target="_blank"
-      >
-        {t<string>('View on UNcover (Azalea)')}
-      </a>
-      <a className='menuItem'
-         href={`https://uncoverexplorer.com/account/${address}?network=Nikau`}
+         href={genesisHash === nikauChain?.genesisHash ? `https://uncoverexplorer.com/account/${address}?network=Nikau` : `https://uncoverexplorer.com/account/${address}`}
          target="_blank"
       >
-        {t<string>('View on UNcover (Nikau)')}
+        {t<string>('View on UNcover')}
       </a>
       <MenuDivider />
       {!isExternal && (
