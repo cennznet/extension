@@ -79,6 +79,12 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
       >
         {t<string>('View on UNcover')}
       </a>
+      <Link
+        className='menuItem'
+        onClick={_toggleEdit}
+      >
+        {t<string>('Account Detail')}
+      </Link>
       <MenuDivider />
       {!isExternal && (
         <Link
@@ -145,7 +151,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
 export default styled(Account)(({ theme }: ThemeProps) => `
   .address {
     margin-bottom: 8px;
-  }
+    }
 
   .editName {
     position: absolute;
