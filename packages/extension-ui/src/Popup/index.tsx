@@ -133,6 +133,7 @@ export default function Popup (): React.ReactElement {
                   <SigningReqContext.Provider value={signRequests}>
                     <ToastProvider>
                       <Switch>
+                      <Route path='/account/balance/:address'>{wrapWithErrorBoundary(<Derive />, 'derive-address')}</Route>
                         <Route path='/auth-list'>{wrapWithErrorBoundary(<AuthList />, 'auth-list')}</Route>
                         <Route path='/account/create'>{wrapWithErrorBoundary(<CreateAccount />, 'account-creation')}</Route>
                         <Route path='/account/forget/:address'>{wrapWithErrorBoundary(<Forget />, 'forget-address')}</Route>

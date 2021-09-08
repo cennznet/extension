@@ -81,9 +81,15 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
       </a>
       <Link
         className='menuItem'
-        onClick={_toggleEdit}
+        
       >
-        {t<string>('Account Detail')}
+        {t<string>('Show Balance')}
+      </Link>
+      <Link
+        className='menuItem'
+        
+      >
+        {t<string>('Transfer')}
       </Link>
       <MenuDivider />
       {!isExternal && (
