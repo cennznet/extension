@@ -3,6 +3,7 @@
 
 import type { AccountJson, AccountWithChildren } from '@cennznet/extension-base/background/types';
 import type { Chain } from '@cennznet/extension-chains/types';
+import { getBalances, isChainSupported } from '@cennznet/extension-ui/util/api';
 import type { IconTheme } from '@polkadot/react-identicon/types';
 import type { SettingsStruct } from '@polkadot/ui-settings/types';
 import type { KeypairType } from '@polkadot/util-crypto/types';
@@ -19,6 +20,8 @@ import styled from 'styled-components';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
 import details from '../assets/details.svg';
+import cennzIcon from '../assets/CENNZ.svg';
+import cpayIcon from '../assets/CPAY.svg';
 import useMetadata from '../hooks/useMetadata';
 import useOutsideClick from '../hooks/useOutsideClick';
 import useToast from '../hooks/useToast';
@@ -103,6 +106,8 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   const [moveMenuUp, setIsMovedMenu] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);
   const { show } = useToast();
+  const [cennzBalance, setCennzBalance] = useState(0);
+  const [cpayBalance, setCpayBalance] = useState(0);
 
   useOutsideClick(actionsRef, () => (showActionsMenu && setShowActionsMenu(!showActionsMenu)));
 
@@ -136,6 +141,15 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   useEffect((): void => {
     setShowActionsMenu(false);
   }, [toggleActions]);
+
+  useEffect((): void => {
+    if (address) {
+      getBalances(address, genesisHash).then(balances => {
+          setCennzBalance(balances.cennz);
+          setCpayBalance(balances.cpay);
+      });
+    }
+  }, [genesisHash])
 
   const theme = 'beachball' as IconTheme;
 
@@ -256,6 +270,22 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
               />
             )}
           </div>
+          {isChainSupported(genesisHash) && (
+            <div className='balanceDisplay'>
+            <div className='balanceContainer'>
+              <div className='currencyIcon'>
+                <img src={cennzIcon} alt='CENNZ'/>
+              </div>
+              <span className='balance' data-field='cennz-balance'>{cennzBalance.toLocaleString()} CENNZ</span>
+            </div>
+            <div className='balanceContainer'>
+              <div className='currencyIcon'>
+                <img src={cpayIcon} alt='CPAY'/>
+              </div>
+              <span className='balance' data-field='cpay-balance'>{cpayBalance.toLocaleString()} CPAY</span>
+            </div>
+          </div>
+          )}
         </div>
         {actions && (
           <>
@@ -338,6 +368,33 @@ export default styled(Address)(({ theme }: ThemeProps) => `
     }
   }
 
+  .balanceDisplay {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    padding-right: 25px;
+
+    .balanceContainer {
+      display: flex;
+      align-items: center;
+      width: 50%;
+      margin-top: 2px;
+      font-size: 14px;
+      white-space: nowrap;
+
+      .currencyIcon {
+        margin-right: 5px;
+
+        img {
+          width: 24px;
+          height: 24px;
+          vertical-align: middle;
+          transform: translateY(-2px);
+        }
+      }
+    }
+  }
+
   .externalIcon, .hardwareIcon {
     margin-right: 0.3rem;
     color: ${theme.labelColor};
@@ -345,7 +402,7 @@ export default styled(Address)(({ theme }: ThemeProps) => `
   }
 
   .identityIcon {
-    margin-left: 15px;
+    margin-left: 7px;
     margin-right: 10px;
 
     & svg {
@@ -363,7 +420,7 @@ export default styled(Address)(({ theme }: ThemeProps) => `
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: 72px;
+    height: 90px;
     border-radius: 4px;
   }
 
