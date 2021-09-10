@@ -109,8 +109,8 @@ async function getConnection (genesisHash: string): Promise<Connection | null> {
   return null;
 }
 
-export function isChainSupported (genesisHash?: string | null): boolean {
-  return !genesisHash || Object.values(genesisHashes).includes(genesisHash);
+export function isChainSupported (genesisHash?: string | null, includeAnyChain: boolean = true): boolean {
+  return (!genesisHash && includeAnyChain) || Object.values(genesisHashes).includes(genesisHash as string);
 }
 
 export async function getBalances (address: string, genesisHash?: string | null): Promise<Balances> {

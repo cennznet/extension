@@ -5,6 +5,8 @@ export { default as AccountNamePasswordCreation } from './AccountNamePasswordCre
 export { default as ActionBar } from './ActionBar';
 export { default as ActionText } from './ActionText';
 export { default as Address } from './Address';
+export { default as AddressInput } from './AddressInput';
+export { default as AmountInput } from './AmountInput';
 export { default as BackButton } from './BackButton';
 export { default as Box } from './Box';
 export { default as Button } from './Button';
