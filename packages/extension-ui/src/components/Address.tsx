@@ -4,7 +4,7 @@
 import type { AccountJson, AccountWithChildren } from '@cennznet/extension-base/background/types';
 import type { Chain } from '@cennznet/extension-chains/types';
 import { findAccountByAddress, findSubstrateAccount } from '@cennznet/extension-ui/util/accounts';
-import { getBalances, isChainSupported } from '@cennznet/extension-ui/util/api';
+import { isChainSupported } from '@cennznet/extension-base/api';
 
 import { faUsb } from '@fortawesome/free-brands-svg-icons';
 import { faCopy, faEye, faEyeSlash, faPaperPlane } from '@fortawesome/free-regular-svg-icons';
@@ -23,6 +23,7 @@ import cennzIcon from '../assets/CENNZ.svg';
 import cpayIcon from '../assets/CPAY.svg';
 
 import details from '../assets/details.svg';
+import useBalances from '../hooks/useBalances';
 import useMetadata from '../hooks/useMetadata';
 import useOutsideClick from '../hooks/useOutsideClick';
 import useToast from '../hooks/useToast';
@@ -96,6 +97,7 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   const [cennzBalance, setCennzBalance] = useState(0);
   const [cpayBalance, setCpayBalance] = useState(0);
   const history = useHistory();
+  const balances = useBalances(address, genesisHash);
 
   useOutsideClick(actionsRef, () => (showActionsMenu && setShowActionsMenu(!showActionsMenu)));
 
@@ -131,13 +133,11 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   }, [toggleActions]);
 
   useEffect((): void => {
-    if (showBalances && address) {
-      getBalances(address, genesisHash).then(balances => {
-          setCennzBalance(balances.cennz);
-          setCpayBalance(balances.cpay);
-      });
+    if (showBalances && balances) {
+      setCennzBalance(balances.cennz);
+      setCpayBalance(balances.cpay);
     }
-  }, [showBalances, genesisHash])
+  }, [showBalances, balances])
 
   const theme = 'beachball' as IconTheme;
 

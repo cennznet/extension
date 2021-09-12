@@ -2,7 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@cennznet/extension-base/background/types';
-import type { Message } from '@cennznet/extension-base/types';
+import type { Balances, Message } from '@cennznet/extension-base/types';
 import type { Chain } from '@cennznet/extension-chains/types';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
@@ -245,4 +245,16 @@ export async function jsonRestore (file: KeyringPair$Json, password: string): Pr
 
 export async function batchRestore (file: KeyringPairs$Json, password: string): Promise<void> {
   return sendMessage('pri(json.batchRestore)', { file, password });
+}
+
+export async function getBalances (address: string, genesisHash: string): Promise<Balances> {
+  return sendMessage('pri(balances.get)', { address, genesisHash });
+}
+
+export async function getStoredBalances (address: string, genesisHash: string): Promise<Balances> {
+  return sendMessage('pri(balances.get.stored)', { address, genesisHash });
+}
+
+export async function saveBalances (address: string, genesisHash: string, balances: Balances): Promise<void> {
+  return sendMessage('pri(balances.save)', { address, genesisHash, balances });
 }

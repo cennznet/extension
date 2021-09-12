@@ -12,6 +12,8 @@ import type { KeypairType } from '@polkadot/util-crypto/types';
 
 import { TypeRegistry } from '@polkadot/types';
 
+import { Balances } from '../types';
+
 import { ALLOWED_PATH } from '../defaults';
 import { AuthUrls } from './handlers/State';
 
@@ -88,6 +90,9 @@ export interface RequestSignatures {
   'pri(accounts.changePassword)': [RequestAccountChangePassword, boolean];
   'pri(authorize.approve)': [RequestAuthorizeApprove, boolean];
   'pri(authorize.list)': [null, ResponseAuthorizeList];
+  'pri(balances.get)': [RequestBalancesGet, Balances];
+  'pri(balances.get.stored)': [RequestBalancesGet, Balances];
+  'pri(balances.save)': [RequestBalancesSave, void];
   'pri(authorize.reject)': [RequestAuthorizeReject, boolean];
   'pri(authorize.requests)': [RequestAuthorizeSubscribe, boolean, AuthorizeRequest[]];
   'pri(authorize.toggle)': [string, ResponseAuthorizeList];
@@ -398,4 +403,15 @@ export interface ResponseJsonGetAccountInfo {
 
 export interface ResponseAuthorizeList {
   list: AuthUrls;
+}
+
+export interface RequestBalancesGet {
+  address: string,
+  genesisHash: string,
+}
+
+export interface RequestBalancesSave {
+  address: string,
+  genesisHash: string,
+  balances: Balances,
 }

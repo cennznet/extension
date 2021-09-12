@@ -6,7 +6,7 @@ import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
 import { BN } from '@cennznet/util';
-import { isChainSupported } from '@cennznet/extension-ui/util/api';
+import { isChainSupported } from '@cennznet/extension-base/api';
 
 import {
   AccountContext,

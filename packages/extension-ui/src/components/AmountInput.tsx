@@ -61,7 +61,7 @@ function isValidAmount (bn: BN): boolean {
 
 function AmountInput ({ className, decimals = DEFAULT_DECIMALS, label, placeholder, onChange, value }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
-  const [amount, setAmount] = useState(bnValueToString(value) || '');
+  const [amount, setAmount] = useState(bnValueToString(value));
   const [error, setError] = useState('');
   const format = useMemo<RegExp>(() => RegExp(`^(?!0\\d)\\d*(\\.\\d{0,${decimals}})?$`), [decimals]);
 

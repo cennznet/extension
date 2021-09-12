@@ -1,6 +1,7 @@
 // Copyright 2019-2021 @polkadot/extension authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { Balances } from '@cennznet/extension-base/types';
 import type { MetadataDef } from '@cennznet/extension-inject/types';
 import type { KeyringPair, KeyringPair$Json, KeyringPair$Meta } from '@polkadot/keyring/types';
 import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
@@ -24,6 +25,8 @@ import type {
   RequestAccountValidate,
   RequestAuthorizeApprove,
   RequestAuthorizeReject,
+  RequestBalancesGet,
+  RequestBalancesSave,
   RequestBatchRestore,
   RequestDeriveCreate,
   RequestDeriveValidate,
@@ -58,6 +61,7 @@ import { keyExtractSuri, mnemonicGenerate, mnemonicValidate } from '@polkadot/ut
 
 import State from './State';
 import { createSubscription, unsubscribe } from './subscriptions';
+import { getBalances } from '../../api';
 
 type CachedUnlocks = Record<string, number>;
 
@@ -544,6 +548,18 @@ export default class Extension {
     return { list: this.#state.toggleAuthorization(url) };
   }
 
+  private getBalances (request: RequestBalancesGet): Promise<Balances | null> {
+    return getBalances(request.address, request.genesisHash);
+  }
+
+  private getStoredBalances (request: RequestBalancesGet): Balances {
+    return this.#state.getBalances(request.address, request.genesisHash);
+  }
+
+  private saveBalances (request: RequestBalancesSave) {
+    this.#state.saveBalances(request.address, request.genesisHash, request.balances);
+  }
+
   // Weird thought, the eslint override is not needed in Tabs
   // eslint-disable-next-line @typescript-eslint/require-await
   public async handle<TMessageType extends MessageTypes> (id: string, type: TMessageType, request: RequestTypes[TMessageType], port: chrome.runtime.Port): Promise<ResponseType<TMessageType>> {
@@ -598,6 +614,15 @@ export default class Extension {
 
       case 'pri(accounts.validate)':
         return this.accountsValidate(request as RequestAccountValidate);
+
+      case 'pri(balances.get)':
+        return this.getBalances(request as RequestBalancesGet);
+
+      case 'pri(balances.get.stored)':
+        return this.getStoredBalances(request as RequestBalancesGet);
+
+      case 'pri(balances.save)':
+        return this.saveBalances(request as RequestBalancesSave);
 
       case 'pri(metadata.approve)':
         return this.metadataApprove(request as RequestMetadataApprove);

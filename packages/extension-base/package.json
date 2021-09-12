@@ -9,7 +9,9 @@
   "sideEffects": false,
   "dependencies": {
     "@babel/runtime": "^7.13.10",
+    "@cennznet/api": "^1.4.2",
     "@cennznet/extension-inject": "^0.38.2",
+    "@cennznet/util": "^1.5.0-alpha.1",
     "@polkadot/api": "^4.4.1",
     "@polkadot/keyring": "^6.0.5",
     "@polkadot/phishing": "^0.6.72",
