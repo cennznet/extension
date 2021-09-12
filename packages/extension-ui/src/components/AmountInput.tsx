@@ -10,6 +10,7 @@ import useTranslation from '@cennznet/extension-ui/hooks/useTranslation';
 interface Props {
   className?: string;
   decimals?: number;
+  disabled?: boolean;
   label: string;
   placeholder?: string;
   onChange?: (value: BN | null) => void;
@@ -59,7 +60,7 @@ function isValidAmount (bn: BN): boolean {
   return true;
 }
 
-function AmountInput ({ className, decimals = DEFAULT_DECIMALS, label, placeholder, onChange, value }: Props): React.ReactElement<Props> {
+function AmountInput ({ className, decimals = DEFAULT_DECIMALS, disabled, label, placeholder, onChange, value }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const [amount, setAmount] = useState(bnValueToString(value));
   const [error, setError] = useState('');
@@ -96,6 +97,7 @@ function AmountInput ({ className, decimals = DEFAULT_DECIMALS, label, placehold
   return (
     <div className={className}>
       <InputWithLabel
+        disabled={disabled}
         label={label}
         placeholder={placeholder}
         onChange={_onChange}

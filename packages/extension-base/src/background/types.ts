@@ -88,6 +88,7 @@ export interface RequestSignatures {
   'pri(accounts.subscribe)': [RequestAccountSubscribe, boolean, AccountJson[]];
   'pri(accounts.validate)': [RequestAccountValidate, boolean];
   'pri(accounts.changePassword)': [RequestAccountChangePassword, boolean];
+  'pri(accounts.transfer)': [RequestTransfer, string];
   'pri(authorize.approve)': [RequestAuthorizeApprove, boolean];
   'pri(authorize.list)': [null, ResponseAuthorizeList];
   'pri(balances.get)': [RequestBalancesGet, Balances];
@@ -406,12 +407,21 @@ export interface ResponseAuthorizeList {
 }
 
 export interface RequestBalancesGet {
-  address: string,
-  genesisHash: string,
+  address: string;
+  genesisHash: string;
 }
 
 export interface RequestBalancesSave {
-  address: string,
-  genesisHash: string,
-  balances: Balances,
+  address: string;
+  genesisHash: string;
+  balances: Balances;
+}
+
+export interface RequestTransfer {
+  genesisHash: string;
+  fromAddress: string;
+  toAddress: string;
+  assetType: string;
+  amount: string;
+  password: string;
 }

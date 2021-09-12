@@ -39,6 +39,7 @@ import type {
   RequestSigningApproveSignature,
   RequestSigningCancel,
   RequestSigningIsLocked,
+  RequestTransfer,
   RequestTypes,
   ResponseAccountExport,
   ResponseAuthorizeList,
@@ -48,7 +49,7 @@ import type {
   ResponseSeedValidate,
   ResponseSigningIsLocked,
   ResponseType,
-  SigningRequest
+  SigningRequest,
 } from '../types';
 
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@cennznet/extension-base/defaults';
@@ -61,7 +62,7 @@ import { keyExtractSuri, mnemonicGenerate, mnemonicValidate } from '@polkadot/ut
 
 import State from './State';
 import { createSubscription, unsubscribe } from './subscriptions';
-import { getBalances } from '../../api';
+import { getBalances, transfer } from '../../api';
 
 type CachedUnlocks = Record<string, number>;
 
@@ -560,6 +561,10 @@ export default class Extension {
     this.#state.saveBalances(request.address, request.genesisHash, request.balances);
   }
 
+  private transfer (request: RequestTransfer): Promise<string> {
+    return transfer(request.genesisHash, request.fromAddress, request.toAddress, request.assetType, request.amount, request.password, keyring);
+  }
+
   // Weird thought, the eslint override is not needed in Tabs
   // eslint-disable-next-line @typescript-eslint/require-await
   public async handle<TMessageType extends MessageTypes> (id: string, type: TMessageType, request: RequestTypes[TMessageType], port: chrome.runtime.Port): Promise<ResponseType<TMessageType>> {
@@ -611,6 +616,9 @@ export default class Extension {
 
       case 'pri(accounts.tie)':
         return this.accountsTie(request as RequestAccountTie);
+
+      case 'pri(accounts.transfer)':
+        return this.transfer(request as RequestTransfer);
 
       case 'pri(accounts.validate)':
         return this.accountsValidate(request as RequestAccountValidate);

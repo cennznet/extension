@@ -165,5 +165,9 @@
   "Send to address": "",
   "Account not found!": "",
   "Asset type": "",
-  "Invalid amount": ""
+  "Invalid amount": "",
+  "Invalid address": "",
+  "Transaction sent!": "",
+  "Send amount": "",
+  "Send funds": ""
 }

@@ -31,4 +31,3 @@ export interface Assets {
   cennz: Asset,
   cpay: Asset,
 }
-
