@@ -269,7 +269,7 @@ const nikau = {
 } as unknown as MetadataDef;
 const rata = {
   "chain": "CENNZnet Rata",
-  "genesisHash": "0x6f2ca0f5c770a9212d30b49604b2e45e2d3c949a3a940bfe908d68dbc4a0415e",
+  "genesisHash": "0x6e763e15d54a416badf701858d8ac2264b153fdff86c12294ad345b47d6dec90",
   "specVersion": 40,
   ...commomTypes
 } as unknown as MetadataDef;
