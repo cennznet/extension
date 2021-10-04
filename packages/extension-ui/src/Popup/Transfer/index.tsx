@@ -2,7 +2,6 @@
 // Copyright 2021 @cennznet/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import useToast from '@cennznet/extension-ui/hooks/useToast';
 import React, { useContext, useState } from 'react';
 import { useParams } from 'react-router';
 import styled from 'styled-components';
@@ -19,6 +18,7 @@ import {
   VerticalSpace, InputWithLabel, Warning, ActionContext,
 } from '../../components';
 import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
+import useToast from '../../hooks/useToast';
 import useTranslation from '../../hooks/useTranslation';
 import { Header } from '../../partials';
 import { findAccountByAddress } from '../../util/accounts';

@@ -25,7 +25,7 @@ export function getConnection (genesisHash: string, onConnect?: (connection: Con
       const assets: Assets = { cennz: defaultAsset, cpay: defaultAsset };
 
       try {
-        const registeredAssets = (await api.rpc.genericAsset.registeredAssets()).toJSON();
+        const registeredAssets = (await (api.rpc as any).genericAsset.registeredAssets()).toJSON();
         registeredAssets.forEach((asset: [number, { symbol: string, decimalPlaces: number }]) => {
           if (asset[0] === cennzId) {
             assets.cennz = {
