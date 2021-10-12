@@ -125,30 +125,31 @@ function Transfer ({ className }: Props): React.ReactElement<Props> {
             }}
             value={to}
           />
-          <Dropdown
-            className="dropdown"
-            isDisabled={isBusy}
-            label={t<string>('Asset type')}
-            onChange={(asset: string) => {
-              setAsset(asset);
-              _removeError();
-            }}
-            options={[
-              { value: 'cennz', text: 'CENNZ' },
-              { value: 'cpay', text: 'CPAY' },
-            ]}
-            value={asset}
-          />
-          <AmountInput
-            disabled={isBusy}
-            label={t<string>('Send amount')}
-            onChange={amount => {
-              setAmount(amount);
-              _removeError();
-            }}
-            placeholder="0.0000"
-            value={amount}
-          />
+          <div className="amount-container">
+            <AmountInput
+              disabled={isBusy}
+              label={t<string>('Send amount')}
+              onChange={amount => {
+                setAmount(amount);
+                _removeError();
+              }}
+              placeholder="0.0000"
+              value={amount}
+            />
+            <Dropdown
+              className="asset-select"
+              isDisabled={isBusy}
+              onChange={(asset: string) => {
+                setAsset(asset);
+                _removeError();
+              }}
+              options={[
+                { value: 'cennz', text: 'CENNZ' },
+                { value: 'cpay', text: 'CPAY' },
+              ]}
+              value={asset}
+            />
+          </div>
           <InputWithLabel
             disabled={isBusy}
             isError={pass.length < MIN_LENGTH || !!passError}
@@ -191,5 +192,16 @@ function Transfer ({ className }: Props): React.ReactElement<Props> {
 export default styled(Transfer)`
   .dropdown {
     margin-bottom: 16px;
+  }
+
+  .amount-container {
+    position: relative;
+  }
+
+  .asset-select {
+    position: absolute;
+    top: 26px;
+    right: 0;
+    width: 100px;
   }
 `;
