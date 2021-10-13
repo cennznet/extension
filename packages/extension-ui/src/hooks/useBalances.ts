@@ -14,11 +14,11 @@ export default function useBalances(address?: string | null, genesisHash?: strin
   const _genesisHash = genesisHash || DEFAULT_GENESIS_HASH;
   const [balances, setBalances] = useState<Balances>(defaultBalances);
 
-  if (!address) {
-    return null;
-  }
-
   useEffect((): void => {
+    if (!address) {
+      return;
+    }
+
     getStoredBalances(address, _genesisHash).then(setBalances);
 
     getBalances(address, _genesisHash).then(async value => {
