@@ -45,16 +45,19 @@ let web3EnablePromise: Promise<InjectedExtension[]> | null = null;
 export { isWeb3Injected, web3EnablePromise };
 
 function getWindowExtensions (originName: string): Promise<[InjectedExtensionInfo, Injected | void][]> {
-  return Promise.all(
-    Object.entries(win.injectedWeb3).map(([name, { enable, version }]): Promise<[InjectedExtensionInfo, Injected | void]> =>
-      Promise.all([
-        Promise.resolve({ name, version }),
-        enable(originName).catch((error: Error): void => {
-          console.error(`Error initializing ${name}: ${error.message}`);
-        })
-      ])
-    )
-  );
+  if (win.injectedWeb3["cennznet-extension"]) {
+    return Promise.all(
+      Object.entries([win.injectedWeb3["cennznet-extension"]]).map(([name, {enable, version}]): Promise<[InjectedExtensionInfo, Injected | void]> =>
+        Promise.all([
+          Promise.resolve({name, version}),
+          enable(originName).catch((error: Error): void => {
+            console.error(`Error initializing ${name}: ${error.message}`);
+          })
+        ])
+      )
+    );
+  }
+  return Promise.resolve([]);
 }
 
 // enables all the providers found on the injected window interface
