@@ -51,7 +51,7 @@ const accounts = [
   { address: '5HSDXAC3qEMkSzZK377sTD1zJhjaPiX5tNWppHx2RQMYkjaJ', expectedIconTheme: 'beachball', name: 'ECDSA Account', type: 'ecdsa' },
   { address: '5FjgD3Ns2UpnHJPVeRViMhCttuemaRXEqaD8V5z4vxcsUByA', expectedIconTheme: 'beachball', name: 'Ed Account', type: 'ed25519' },
   { address: '5Ggap6soAPaP5UeNaiJsgqQwdVhhNnm6ez7Ba1w9jJ62LM2Q', expectedIconTheme: 'beachball', name: 'Parent Sr Account', type: 'sr25519' },
-  { address: '0xd5D81CD4236a43F48A983fc5B895975c511f634D', expectedIconTheme: 'ethereum', name: 'Ethereum', type: 'ethereum' },
+  { address: '0xd5D81CD4236a43F48A983fc5B895975c511f634D', expectedIconTheme: 'beachball', name: 'Ethereum', type: 'ethereum' },
   { ...externalAccount },
   { ...hardwareAccount }
 ] as AccountTestJson[];
@@ -75,7 +75,7 @@ const accountsWithGenesisHash = [
     address: '5Ggap6soAPaP5UeNaiJsgqQwdVhhNnm6ez7Ba1w9jJ62LM2Q',
     expectedEncodedAddress: '15csxS8s2AqrX1etYMMspzF6V7hM56KEjUqfjJvWHP7YWkoF',
     expectedIconTheme: 'beachball',
-    expectedNetworkLabel: 'beachball',
+    expectedNetworkLabel: 'Polkadot',
     genesisHash: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
     type: 'sr25519'
   },
