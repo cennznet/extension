@@ -48,4 +48,4 @@ jobs:
       run: |
         echo "//registry.npmjs.org/:_authToken=${NPM_KEY}" > ~/.npmrc
         echo 'Publishing to npmjs.org.'
-        npx lerna exec --ignore @cennznet/extension-ui -- 'cd build && npm publish --access public' --dry-run
+        npx lerna exec --ignore @cennznet/extension-ui -- 'cd build && npm publish --access public'
