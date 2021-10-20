@@ -51,7 +51,7 @@ const accounts = [
   { address: '5HSDXAC3qEMkSzZK377sTD1zJhjaPiX5tNWppHx2RQMYkjaJ', expectedIconTheme: 'beachball', name: 'ECDSA Account', type: 'ecdsa' },
   { address: '5FjgD3Ns2UpnHJPVeRViMhCttuemaRXEqaD8V5z4vxcsUByA', expectedIconTheme: 'beachball', name: 'Ed Account', type: 'ed25519' },
   { address: '5Ggap6soAPaP5UeNaiJsgqQwdVhhNnm6ez7Ba1w9jJ62LM2Q', expectedIconTheme: 'beachball', name: 'Parent Sr Account', type: 'sr25519' },
-  { address: '0xd5D81CD4236a43F48A983fc5B895975c511f634D', expectedIconTheme: 'beachball', name: 'Ethereum', type: 'ethereum' },
+  // { address: '0xd5D81CD4236a43F48A983fc5B895975c511f634D', expectedIconTheme: 'beachball', name: 'Ethereum', type: 'ethereum' },
   { ...externalAccount },
   { ...hardwareAccount }
 ] as AccountTestJson[];
@@ -87,16 +87,16 @@ const accountsWithGenesisHash = [
     expectedNetworkLabel: 'Kusama',
     genesisHash: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe',
     type: 'sr25519'
-  },
-  // with Edgeware genesis Hash
-  {
-    address: '5GYQRJj3NUznYDzCduENRcocMsyxmb6tjb5xW87ZMErBe9R7',
-    expectedEncodedAddress: 'mzKNamvvJPM5ApxwGSYD5VjjtyfrB4g8fhMyCc29K37nuop',
-    expectedIconTheme: 'substrate',
-    expectedNetworkLabel: 'Edgeware',
-    genesisHash: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b',
-    type: 'sr25519'
   }
+  // // with Edgeware genesis Hash
+  // {
+  //   address: '5GYQRJj3NUznYDzCduENRcocMsyxmb6tjb5xW87ZMErBe9R7',
+  //   expectedEncodedAddress: 'mzKNamvvJPM5ApxwGSYD5VjjtyfrB4g8fhMyCc29K37nuop',
+  //   expectedIconTheme: 'substrate',
+  //   expectedNetworkLabel: 'Edgeware',
+  //   genesisHash: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b',
+  //   type: 'sr25519'
+  // }
 ] as AccountTestGenesisJson[];
 
 const mountComponent = async (addressComponentProps: AddressComponentProps, contextAccounts: AccountJson[]): Promise<{
