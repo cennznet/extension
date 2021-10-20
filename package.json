@@ -41,6 +41,7 @@
     "@polkadot/dev": "^0.62.7",
     "@types/jest": "^26.0.22",
     "i18next-scanner": "^3.0.0",
+    "lerna": "^3.13.1",
     "sinon-chrome": "^3.0.1",
     "stylelint": "^13.12.0",
     "stylelint-config-recommended": "^4.0.0",
