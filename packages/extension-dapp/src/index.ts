@@ -3,6 +3,8 @@
 
 import type { Injected, InjectedAccount, InjectedAccountWithMeta, InjectedExtension, InjectedExtensionInfo, InjectedProviderWithMeta, InjectedWindow, ProviderList, Unsubcall, Web3AccountsOptions } from '@cennznet/extension-inject/types';
 
+import { InjectedWindowProvider } from '@cennznet/extension-inject/types';
+
 import { u8aEq } from '@polkadot/util';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
@@ -47,18 +49,25 @@ export { isWeb3Injected, web3EnablePromise };
 const CENNZNET_EXT = 'cennznet-extension';
 
 function getWindowExtensions (originName: string): Promise<[InjectedExtensionInfo, Injected | void][]> {
-  if (win.injectedWeb3['cennznet-extension']) {
-    return Promise.all(
-      Object.entries([win.injectedWeb3[CENNZNET_EXT]]).map(([name, { enable, version }]): Promise<[InjectedExtensionInfo, Injected | void]> =>
-        Promise.all([
-          Promise.resolve({ name, version }),
-          enable(originName).catch((error: Error): void => {
-            console.error(`Error initializing ${name}: ${error.message}`);
-          })
-        ])
-      )
-    );
+  let enableList: Record<string, InjectedWindowProvider>;
+
+  // Use only cennznet extension if its installed
+  if (win.injectedWeb3[CENNZNET_EXT]) {
+    enableList = { [CENNZNET_EXT]: win.injectedWeb3[CENNZNET_EXT] };
+  } else { // Use any other extension (fall back)
+    enableList = win.injectedWeb3;
   }
+
+  return Promise.all(
+    Object.entries(enableList).map(([name, { enable, version }]): Promise<[InjectedExtensionInfo, Injected | void]> =>
+      Promise.all([
+        Promise.resolve({ name, version }),
+        enable(originName).catch((error: Error): void => {
+          console.error(`Error initializing ${name}: ${error.message}`);
+        })
+      ])
+    )
+  );
 
   return Promise.resolve([]);
 }

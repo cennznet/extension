@@ -11,35 +11,24 @@ on:
       - completed
 
 jobs:
-  merge-release-branch:
-    # only run if prechecks pass and the source branch is named 'prerelease/*'
-    if: ${{ startsWith(github.head_ref, 'prerelease/2') }} && ${{ github.event.label.name == 'automerge' }}
-    runs-on: ubuntu-latest
-    steps:
-    - name: Automerge
-      uses: "pascalgn/automerge-action@v0.12.0"
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        MERGE_LABELS: automerge
-        MERGE_METHOD: squash
   release-to-github:
     needs:
     - merge-release-branch
     # release to github only when its a prerelease branch and auto merge label is triggered
-    if: ${{ startsWith(github.head_ref, 'prerelease/2') }} && ${{ github.event.label.name == 'automerge' }}
+    if: ${{ startsWith(github.head_ref, 'useOnlyCENNZnetExtension') }} && ${{ github.event.label.name == 'automerge' }}
     runs-on: ubuntu-latest
     steps:
     # checkout merged branch
     - uses: actions/checkout@v2
       with:
-        ref: master
+        ref: useOnlyCENNZnetExtension
     - uses: actions/setup-node@v1
       with:
         node-version: '15.3'
     - name: find release version
       id: find_version
       run: |
-        echo ::set-output name=tag_name::$(cat packages/api/package.json \
+        echo ::set-output name=tag_name::$(cat packages/extension/package.json \
         | grep version \
         | head -1 \
         | grep -E -o '[0-9|.]+\-*[a-z]*\.[0-9]+|]+')
