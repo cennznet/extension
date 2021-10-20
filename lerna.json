@@ -1,6 +1,10 @@
 {
   "packages": [
-    "packages/*"
+    "packages/extension",
+    "packages/extension-base",
+    "packages/extension-chain",
+    "packages/extension-dapp",
+    "packages/extension-inject"
   ],
   "npmClient": "yarn",
   "useWorkspaces": true,
