@@ -1379,7 +1379,6 @@ __metadata:
   resolution: "@cennznet/extension-chains@workspace:packages/extension-chains"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@cennznet/extension-inject": ^0.38.2
     "@polkadot/networks": ^6.0.5
   peerDependencies:
     "@polkadot/api": "*"
