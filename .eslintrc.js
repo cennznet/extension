@@ -12,8 +12,7 @@ module.exports = {
     '.yarn/**',
     '**/build/*',
     '**/coverage/*',
-    '**/node_modules/*',
-    '**/config.ts'
+    '**/node_modules/*'
   ],
   parserOptions: {
     ...base.parserOptions,

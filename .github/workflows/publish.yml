@@ -1,4 +1,4 @@
-name: Release Pipeline (develop/2.0)
+name: NPM Release Pipeline (develop/2.0)
 
 on:
   pull_request:
@@ -50,4 +50,4 @@ jobs:
       run: |
         echo "//registry.npmjs.org/:_authToken=${NPM_KEY}" > ~/.npmrc
         echo 'Publishing to npmjs.org.'
-        npx lerna exec -- 'cd build && npm publish --access public'
+        npx lerna exec -- 'cd build && npm publish --access public' --dry-run

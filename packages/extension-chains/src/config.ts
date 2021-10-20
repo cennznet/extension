@@ -1,7 +1,9 @@
 // [object Object]
 // SPDX-License-Identifier: Apache-2.0
 
-import { MetadataDef } from '@cennznet/extension-inject/types';
+// eslint-disable-next-line header/header
+import type { MetadataDef } from '@cennznet/extension-inject/types';
+/* eslint sort-keys: 0 */
 
 const commomTypes = { color: '#191a2e',
   icon: 'CENNZnet',
@@ -270,9 +272,9 @@ const nikau = {
   ...commomTypes
 } as unknown as MetadataDef;
 const rata = {
-  "chain": "CENNZnet Rata",
-  "genesisHash": "0x6e763e15d54a416badf701858d8ac2264b153fdff86c12294ad345b47d6dec90",
-  "specVersion": 40,
+  chain: 'CENNZnet Rata',
+  genesisHash: '0x6e763e15d54a416badf701858d8ac2264b153fdff86c12294ad345b47d6dec90',
+  specVersion: 40,
   ...commomTypes
 } as unknown as MetadataDef;
 const azalea = {
