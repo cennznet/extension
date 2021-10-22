@@ -3,10 +3,10 @@
 
 import type { Chain } from '@cennznet/extension-chains/types';
 
+import BN from 'bn.js';
 import { useEffect, useState } from 'react';
 
 import { getMetadata } from '../messaging';
-import BN from 'bn.js';
 
 export default function useMetadata (genesisHash?: string | null, specVersion?: BN | null, isPartial?: boolean): Chain | null {
   const [chain, setChain] = useState<Chain | null>(null);
@@ -22,7 +22,7 @@ export default function useMetadata (genesisHash?: string | null, specVersion?: 
     } else {
       setChain(null);
     }
-  }, [genesisHash, isPartial]);
+  }, [genesisHash, specVersion, isPartial]);
 
   return chain;
 }

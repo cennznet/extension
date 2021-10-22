@@ -3,6 +3,8 @@
 
 import type { Injected, InjectedAccount, InjectedAccountWithMeta, InjectedExtension, InjectedExtensionInfo, InjectedProviderWithMeta, InjectedWindow, ProviderList, Unsubcall, Web3AccountsOptions } from '@cennznet/extension-inject/types';
 
+import { InjectedWindowProvider } from '@cennznet/extension-inject/types';
+
 import { u8aEq } from '@polkadot/util';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
@@ -44,9 +46,20 @@ let web3EnablePromise: Promise<InjectedExtension[]> | null = null;
 
 export { isWeb3Injected, web3EnablePromise };
 
+const CENNZNET_EXT = 'cennznet-extension';
+
 function getWindowExtensions (originName: string): Promise<[InjectedExtensionInfo, Injected | void][]> {
+  let enableList: Record<string, InjectedWindowProvider>;
+
+  // Use only cennznet extension if its installed
+  if (win.injectedWeb3[CENNZNET_EXT]) {
+    enableList = { [CENNZNET_EXT]: win.injectedWeb3[CENNZNET_EXT] };
+  } else { // Use any other extension (fall back)
+    enableList = win.injectedWeb3;
+  }
+
   return Promise.all(
-    Object.entries(win.injectedWeb3).map(([name, { enable, version }]): Promise<[InjectedExtensionInfo, Injected | void]> =>
+    Object.entries(enableList).map(([name, { enable, version }]): Promise<[InjectedExtensionInfo, Injected | void]> =>
       Promise.all([
         Promise.resolve({ name, version }),
         enable(originName).catch((error: Error): void => {
@@ -113,6 +126,7 @@ export async function web3Accounts ({ ss58Format }: Web3AccountsOptions = {}): P
         return mapAccounts(source, list, ss58Format);
       } catch (error) {
         console.error('web3accounts failed:', error);
+
         // cannot handle this one
         return [];
       }

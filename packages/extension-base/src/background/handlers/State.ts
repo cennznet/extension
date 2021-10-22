@@ -5,10 +5,10 @@ import type { MetadataDef, ProviderMeta } from '@cennznet/extension-inject/types
 import type { JsonRpcResponse, ProviderInterface, ProviderInterfaceCallback } from '@polkadot/rpc-provider/types';
 import type { AccountJson, AuthorizeRequest, MetadataRequest, RequestAuthorizeTab, RequestRpcSend, RequestRpcSubscribe, RequestRpcUnsubscribe, RequestSign, ResponseRpcListProviders, ResponseSigning, SigningRequest } from '../types';
 
-import { BehaviorSubject } from 'rxjs';
-
 import { addMetadata, knownMetadata } from '@cennznet/extension-chains';
 import chrome from '@cennznet/extension-inject/chrome';
+import { BehaviorSubject } from 'rxjs';
+
 import { assert } from '@polkadot/util';
 
 import { MetadataStore } from '../../stores';
