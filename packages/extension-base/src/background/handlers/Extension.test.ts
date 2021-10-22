@@ -197,7 +197,7 @@ describe('Extension', () => {
       const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
-      tabs.handle('1615191860871.5', 'pub(extrinsic.sign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
+      tabs.handle('1615191860871.5', 'pub(extrinsic.cSign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
         .then((result) => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
@@ -259,7 +259,7 @@ describe('Extension', () => {
       const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
-      tabs.handle('1615191860771.5', 'pub(extrinsic.sign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
+      tabs.handle('1615191860771.5', 'pub(extrinsic.cSign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
         .then((result) => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
@@ -315,7 +315,7 @@ describe('Extension', () => {
       const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
-      tabs.handle('1615191860771.5', 'pub(extrinsic.sign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
+      tabs.handle('1615191860771.5', 'pub(extrinsic.cSign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
         .then((result) => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
@@ -382,7 +382,7 @@ describe('Extension', () => {
       const signatureExpected = registry
         .createType('ExtrinsicPayload', payload, { version: payload.version }).sign(pair);
 
-      tabs.handle('1615191860771.5', 'pub(extrinsic.sign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
+      tabs.handle('1615191860771.5', 'pub(extrinsic.cSign)', payload, 'http://localhost:3000', {} as chrome.runtime.Port)
         .then((result) => {
           expect((result as ResponseSigning)?.signature).toEqual(signatureExpected.signature);
         }).catch((err) => console.log(err));
