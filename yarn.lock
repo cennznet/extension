@@ -1361,12 +1361,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@cennznet/extension-base@^0.38.2, @cennznet/extension-base@workspace:packages/extension-base":
+"@cennznet/extension-base@^0.38.3, @cennznet/extension-base@workspace:packages/extension-base":
   version: 0.0.0-use.local
   resolution: "@cennznet/extension-base@workspace:packages/extension-base"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@cennznet/extension-inject": ^0.38.2
+    "@cennznet/extension-inject": ^0.38.3
     "@polkadot/api": ^4.4.1
     "@polkadot/keyring": ^6.0.5
     "@polkadot/phishing": ^0.6.72
@@ -1374,12 +1374,12 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cennznet/extension-chains@^0.38.2, @cennznet/extension-chains@workspace:packages/extension-chains":
+"@cennznet/extension-chains@^0.38.3, @cennznet/extension-chains@workspace:packages/extension-chains":
   version: 0.0.0-use.local
   resolution: "@cennznet/extension-chains@workspace:packages/extension-chains"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@cennznet/extension-inject": ^0.38.2
+    "@cennznet/extension-inject": ^0.38.3
     "@polkadot/networks": ^6.0.5
   peerDependencies:
     "@polkadot/api": "*"
@@ -1391,7 +1391,7 @@ __metadata:
   resolution: "@cennznet/extension-dapp@workspace:packages/extension-dapp"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@cennznet/extension-inject": ^0.38.2
+    "@cennznet/extension-inject": ^0.38.3
     "@polkadot/util": ^6.0.5
     "@polkadot/util-crypto": ^6.0.5
   peerDependencies:
@@ -1401,7 +1401,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cennznet/extension-inject@^0.38.2, @cennznet/extension-inject@workspace:packages/extension-inject":
+"@cennznet/extension-inject@^0.38.3, @cennznet/extension-inject@workspace:packages/extension-inject":
   version: 0.0.0-use.local
   resolution: "@cennznet/extension-inject@workspace:packages/extension-inject"
   dependencies:
@@ -1413,14 +1413,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@cennznet/extension-ui@^0.38.2, @cennznet/extension-ui@workspace:packages/extension-ui":
+"@cennznet/extension-ui@^0.38.3, @cennznet/extension-ui@workspace:packages/extension-ui":
   version: 0.0.0-use.local
   resolution: "@cennznet/extension-ui@workspace:packages/extension-ui"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@cennznet/extension-base": ^0.38.2
-    "@cennznet/extension-chains": ^0.38.2
-    "@cennznet/extension-inject": ^0.38.2
+    "@cennznet/extension-base": ^0.38.3
+    "@cennznet/extension-chains": ^0.38.3
+    "@cennznet/extension-inject": ^0.38.3
     "@fortawesome/fontawesome-svg-core": ^1.2.35
     "@fortawesome/free-brands-svg-icons": ^5.15.3
     "@fortawesome/free-regular-svg-icons": ^5.15.3
@@ -1463,9 +1463,9 @@ __metadata:
   resolution: "@cennznet/extension@workspace:packages/extension"
   dependencies:
     "@babel/runtime": ^7.13.10
-    "@cennznet/extension-base": ^0.38.2
-    "@cennznet/extension-inject": ^0.38.2
-    "@cennznet/extension-ui": ^0.38.2
+    "@cennznet/extension-base": ^0.38.3
+    "@cennznet/extension-inject": ^0.38.3
+    "@cennznet/extension-ui": ^0.38.3
     "@polkadot/dev": ^0.62.7
     babel-loader: ^8.2.2
     browser-resolve: ^2.0.0
