@@ -133,10 +133,10 @@ export default class PostMessageProvider implements InjectedProvider {
     this.#isConnected = false;
     this.#eventemitter.emit('disconnected');
 
-    const meta = await sendRequest('pub(rpc.startProvider)', key);
+    const meta = await sendRequest('pub(rpc.cStartProvider)', key);
 
     // eslint-disable-next-line @typescript-eslint/no-floating-promises
-    sendRequest('pub(rpc.subscribeConnected)', null, (connected) => {
+    sendRequest('pub(rpc.cSubscribeConnected)', null, (connected) => {
       this.#isConnected = connected;
 
       if (connected) {
