@@ -10,6 +10,7 @@ import type { MessageTypes, RequestAccountList, RequestAuthorizeTab, RequestRpcS
 
 import { PHISHING_PAGE_REDIRECT } from '@cennznet/extension-base/defaults';
 import { canDerive } from '@cennznet/extension-base/utils';
+
 import { checkIfDenied } from '@polkadot/phishing';
 import keyring from '@polkadot/ui-keyring';
 import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';
@@ -52,7 +53,7 @@ export default class Tabs {
 
   // FIXME This looks very much like what we have in Extension
   private accountsSubscribe (url: string, id: string, port: chrome.runtime.Port): boolean {
-    const cb = createSubscription<'pub(accounts.subscribe)'>(id, port);
+    const cb = createSubscription<'pub(accounts.cSubscribe)'>(id, port);
     const subscription = accountsObservable.subject.subscribe((accounts: SubjectInfo): void =>
       cb(transformAccounts(accounts))
     );
@@ -112,8 +113,8 @@ export default class Tabs {
   }
 
   private async rpcSubscribe (request: RequestRpcSubscribe, id: string, port: chrome.runtime.Port): Promise<boolean> {
-    const innerCb = createSubscription<'pub(rpc.subscribe)'>(id, port);
-    const cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.subscribe)']): void => innerCb(data);
+    const innerCb = createSubscription<'pub(rpc.cSubscribe)'>(id, port);
+    const cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.cSubscribe)']): void => innerCb(data);
     const subscriptionId = await this.#state.rpcSubscribe(request, cb, port);
 
     port.onDisconnect.addListener((): void => {
@@ -125,8 +126,8 @@ export default class Tabs {
   }
 
   private rpcSubscribeConnected (request: null, id: string, port: chrome.runtime.Port): Promise<boolean> {
-    const innerCb = createSubscription<'pub(rpc.subscribeConnected)'>(id, port);
-    const cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.subscribeConnected)']): void => innerCb(data);
+    const innerCb = createSubscription<'pub(rpc.cSubscribeConnected)'>(id, port);
+    const cb = (_error: Error | null, data: SubscriptionMessageTypes['pub(rpc.cSubscribeConnected)']): void => innerCb(data);
 
     this.#state.rpcSubscribeConnected(request, cb, port);
 
@@ -170,48 +171,48 @@ export default class Tabs {
       return this.redirectIfPhishing(url);
     }
 
-    if (type !== 'pub(authorize.tab)') {
-      this.#state.ensureUrlAuthorized(url);
+    if (type !== 'pub(authorize.cennzTab)') {
+      this.#state.ensureUrlAuthorized1(url);
     }
 
     switch (type) {
-      case 'pub(authorize.tab)':
+      case 'pub(authorize.cennzTab)':
         return this.authorize(url, request as RequestAuthorizeTab);
 
-      case 'pub(accounts.list)':
+      case 'pub(accounts.cList)':
         return this.accountsList(url, request as RequestAccountList);
 
-      case 'pub(accounts.subscribe)':
+      case 'pub(accounts.cSubscribe)':
         return this.accountsSubscribe(url, id, port);
 
-      case 'pub(bytes.sign)':
+      case 'pub(bytes.cSign)':
         return this.bytesSign(url, request as SignerPayloadRaw);
 
-      case 'pub(extrinsic.sign)':
+      case 'pub(extrinsic.cSign)':
         return this.extrinsicSign(url, request as SignerPayloadJSON);
 
-      case 'pub(metadata.list)':
+      case 'pub(metadata.cList)':
         return this.metadataList(url);
 
-      case 'pub(metadata.provide)':
+      case 'pub(metadata.cProvide)':
         return this.metadataProvide(url, request as MetadataDef);
 
-      case 'pub(rpc.listProviders)':
+      case 'pub(rpc.cListProviders)':
         return this.rpcListProviders();
 
-      case 'pub(rpc.send)':
+      case 'pub(rpc.cSend)':
         return this.rpcSend(request as RequestRpcSend, port);
 
-      case 'pub(rpc.startProvider)':
+      case 'pub(rpc.cStartProvider)':
         return this.rpcStartProvider(request as string, port);
 
-      case 'pub(rpc.subscribe)':
+      case 'pub(rpc.cSubscribe)':
         return this.rpcSubscribe(request as RequestRpcSubscribe, id, port);
 
-      case 'pub(rpc.subscribeConnected)':
+      case 'pub(rpc.cSubscribeConnected)':
         return this.rpcSubscribeConnected(request as null, id, port);
 
-      case 'pub(rpc.unsubscribe)':
+      case 'pub(rpc.cUnsubscribe)':
         return this.rpcUnsubscribe(request as RequestRpcUnsubscribe, port);
 
       default:

@@ -4,12 +4,11 @@
 import type { ThemeProps } from '../../types';
 import type { AccountInfo } from '.';
 
+import { validateSeed } from '@cennznet/extension-ui/messaging';
 import { faCaretDown, faCaretRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
 import styled from 'styled-components';
-
-import { validateSeed } from '@cennznet/extension-ui/messaging';
 
 import { ButtonArea, Dropdown, InputWithLabel, NextStepButton, TextAreaWithLabel, VerticalSpace, Warning } from '../../components';
 import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
