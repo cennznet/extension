@@ -68,8 +68,6 @@ function getWindowExtensions (originName: string): Promise<[InjectedExtensionInf
       ])
     )
   );
-
-  return Promise.resolve([]);
 }
 
 // enables all the providers found on the injected window interface
