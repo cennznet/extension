@@ -111,20 +111,20 @@ export interface RequestSignatures {
   'pri(signing.requests)': [RequestSigningSubscribe, boolean, SigningRequest[]];
   'pri(window.open)': [AllowedPath, boolean];
   // public/external requests, i.e. from a page
-  'pub(accounts.list)': [RequestAccountList, InjectedAccount[]];
-  'pub(accounts.subscribe)': [RequestAccountSubscribe, boolean, InjectedAccount[]];
-  'pub(authorize.tab)': [RequestAuthorizeTab, null];
-  'pub(bytes.sign)': [SignerPayloadRaw, ResponseSigning];
-  'pub(extrinsic.sign)': [SignerPayloadJSON, ResponseSigning];
-  'pub(metadata.list)': [null, InjectedMetadataKnown[]];
-  'pub(metadata.provide)': [MetadataDef, boolean];
+  'pub(accounts.cList)': [RequestAccountList, InjectedAccount[]];
+  'pub(accounts.cSubscribe)': [RequestAccountSubscribe, boolean, InjectedAccount[]];
+  'pub(authorize.cennzTab)': [RequestAuthorizeTab, null];
+  'pub(bytes.cSign)': [SignerPayloadRaw, ResponseSigning];
+  'pub(extrinsic.cSign)': [SignerPayloadJSON, ResponseSigning];
+  'pub(metadata.cList)': [null, InjectedMetadataKnown[]];
+  'pub(metadata.cProvide)': [MetadataDef, boolean];
   'pub(phishing.redirectIfDenied)': [null, boolean];
-  'pub(rpc.listProviders)': [void, ResponseRpcListProviders];
-  'pub(rpc.send)': [RequestRpcSend, JsonRpcResponse];
-  'pub(rpc.startProvider)': [string, ProviderMeta];
-  'pub(rpc.subscribe)': [RequestRpcSubscribe, number, JsonRpcResponse];
-  'pub(rpc.subscribeConnected)': [null, boolean, boolean];
-  'pub(rpc.unsubscribe)': [RequestRpcUnsubscribe, boolean];
+  'pub(rpc.cListProviders)': [void, ResponseRpcListProviders];
+  'pub(rpc.cSend)': [RequestRpcSend, JsonRpcResponse];
+  'pub(rpc.cStartProvider)': [string, ProviderMeta];
+  'pub(rpc.cSubscribe)': [RequestRpcSubscribe, number, JsonRpcResponse];
+  'pub(rpc.cSubscribeConnected)': [null, boolean, boolean];
+  'pub(rpc.cUnsubscribe)': [RequestRpcUnsubscribe, boolean];
 }
 
 export type MessageTypes = keyof RequestSignatures;

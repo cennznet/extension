@@ -5,10 +5,10 @@ import type { MetadataDef, ProviderMeta } from '@cennznet/extension-inject/types
 import type { JsonRpcResponse, ProviderInterface, ProviderInterfaceCallback } from '@polkadot/rpc-provider/types';
 import type { AccountJson, AuthorizeRequest, MetadataRequest, RequestAuthorizeTab, RequestRpcSend, RequestRpcSubscribe, RequestRpcUnsubscribe, RequestSign, ResponseRpcListProviders, ResponseSigning, SigningRequest } from '../types';
 
-import { BehaviorSubject } from 'rxjs';
-
 import { addMetadata, knownMetadata } from '@cennznet/extension-chains';
 import chrome from '@cennznet/extension-inject/chrome';
+import { BehaviorSubject } from 'rxjs';
+
 import { assert } from '@polkadot/util';
 
 import { MetadataStore } from '../../stores';
@@ -318,7 +318,7 @@ export default class State {
     });
   }
 
-  public ensureUrlAuthorized (url: string): boolean {
+  public ensureUrlAuthorized1 (url: string): boolean {
     const entry = this.#authUrls[this.stripUrl(url)];
 
     assert(entry, `The source ${url} has not been enabled yet`);
@@ -367,7 +367,7 @@ export default class State {
   public rpcSend (request: RequestRpcSend, port: chrome.runtime.Port): Promise<JsonRpcResponse> {
     const provider = this.#injectedProviders.get(port);
 
-    assert(provider, 'Cannot call pub(rpc.subscribe) before provider is set');
+    assert(provider, 'Cannot call pub(rpc.cSubscribe) before provider is set');
 
     return provider.send(request.method, request.params) as Promise<JsonRpcResponse>;
   }
@@ -400,7 +400,7 @@ export default class State {
   public rpcSubscribe ({ method, params, type }: RequestRpcSubscribe, cb: ProviderInterfaceCallback, port: chrome.runtime.Port): Promise<number | string> {
     const provider = this.#injectedProviders.get(port);
 
-    assert(provider, 'Cannot call pub(rpc.subscribe) before provider is set');
+    assert(provider, 'Cannot call pub(rpc.cSubscribe) before provider is set');
 
     return provider.subscribe(type, method, params, cb);
   }

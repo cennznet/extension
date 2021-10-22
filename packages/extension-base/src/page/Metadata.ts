@@ -13,10 +13,10 @@ export default class Metadata implements InjectedMetadata {
   }
 
   public get (): Promise<InjectedMetadataKnown[]> {
-    return sendRequest('pub(metadata.list)');
+    return sendRequest('pub(metadata.cList)');
   }
 
   public provide (definition: MetadataDef): Promise<boolean> {
-    return sendRequest('pub(metadata.provide)', definition);
+    return sendRequest('pub(metadata.cProvide)', definition);
   }
 }
