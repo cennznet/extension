@@ -2,11 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { MetadataDef } from '@cennznet/extension-inject/types';
+import type { ExtDef } from '@polkadot/types/extrinsic/signedExtensions/types';
 import type { Chain, MetadataFetched, RuntimeTypes } from './types';
 
 import { Metadata } from '@polkadot/metadata';
 import { TypeRegistry } from '@polkadot/types';
 import { base64Decode } from '@polkadot/util-crypto';
+
 import config from './config';
 // imports chain details, generally metadata. For the generation of these,
 // inside the api, run `yarn chain:info --ws <url>`
@@ -20,27 +22,38 @@ const definitions = new Map<string, MetadataDef>(
 /** when metadata definition stored in extension is outdated
  * get the definition for @cennznet/api/extension-releases
  * for cennznet specific chains **/
-export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFetched | null {
+export function getLatestMetaFromServer (genesisHashExpected: string): MetadataFetched | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/metaCalls.json", false);
+
+    xmlHttp.open('GET', 'https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/metaCalls.json', false);
     xmlHttp.send(null);
-    let response = xmlHttp.responseText;
+    const response: string = xmlHttp.responseText;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const metadataDetails = JSON.parse(response);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const metaCallsList = metadataDetails?.metaCalls;
+
     if (metaCallsList) {
       // metaCalls is { genesisHash-specVersion: metaCalls }
-      const key = Object.keys(metaCallsList).filter(v => v.includes(genesisHashExpected));
+      const key = Object.keys(metaCallsList).filter((v) => v.includes(genesisHashExpected));
+
       if (!key[0]) {
         return null;
       }
+
       const [, specVersion] = key[0].split('-');
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
       const metaCalls = metaCallsList[key[0]];
-      return {metaCalls, specVersion: parseInt(specVersion)};
+
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+      return { metaCalls, specVersion: parseInt(specVersion) } as MetadataFetched;
     }
+
     return null;
   } catch (e) {
-    console.log('Err:',e);
+    console.log('Err:', e);
+
     return null;
   }
 }
@@ -48,22 +61,31 @@ export function getLatestMetaFromServer(genesisHashExpected: string): MetadataFe
 /** when types stored in extension is outdated
  * get the types for @cennznet/api/extension-releases
  * for cennznet specific chains **/
-export function getLatestTypesFromServer(genesisHashExpected: string): RuntimeTypes | null {
+export function getLatestTypesFromServer (genesisHashExpected: string): RuntimeTypes | null {
   try {
     const xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", "https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/runtimeModuleTypes.json", false);
+
+    xmlHttp.open('GET', 'https://raw.githubusercontent.com/cennznet/api.js/master/extension-releases/runtimeModuleTypes.json', false);
     xmlHttp.send(null);
-    let response = xmlHttp.responseText;
+    const response = xmlHttp.responseText;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     const additionalTypes = JSON.parse(response);
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
     const typesForCurrentChain = additionalTypes[genesisHashExpected];
+
     if (typesForCurrentChain) {
-      const types = typesForCurrentChain.types;
-      const userExtensions = typesForCurrentChain.userExtensions;
-      return {types, userExtensions};
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access
+      const types: Record<string, Record<string, string> | string> = typesForCurrentChain.types;
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access,@typescript-eslint/no-unsafe-assignment
+      const userExtensions: ExtDef = typesForCurrentChain.userExtensions;
+
+      return { types, userExtensions } as RuntimeTypes;
     }
+
     return null;
   } catch (e) {
-    console.log('Err:',e);
+    console.log('Err:', e);
+
     return null;
   }
 }

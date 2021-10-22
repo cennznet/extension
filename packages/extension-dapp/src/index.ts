@@ -113,6 +113,7 @@ export async function web3Accounts ({ ss58Format }: Web3AccountsOptions = {}): P
         return mapAccounts(source, list, ss58Format);
       } catch (error) {
         console.error('web3accounts failed:', error);
+
         // cannot handle this one
         return [];
       }
