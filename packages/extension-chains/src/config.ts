@@ -1,7 +1,9 @@
 // [object Object]
 // SPDX-License-Identifier: Apache-2.0
 
-import { MetadataDef } from '@cennznet/extension-inject/types';
+// eslint-disable-next-line header/header
+import type { MetadataDef } from '@cennznet/extension-inject/types';
+/* eslint sort-keys: 0 */
 
 const commomTypes = { color: '#191a2e',
   icon: 'CENNZnet',

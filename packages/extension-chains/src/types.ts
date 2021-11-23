@@ -1,7 +1,8 @@
 // Copyright 2019-2021 @polkadot/extension-chains authors & contributors
 // SPDX-License-Identifier: Apache-2.0
-import type { ExtDef } from '@polkadot/types/extrinsic/signedExtensions/types';
+
 import type { MetadataDef } from '@cennznet/extension-inject/types';
+import type { ExtDef } from '@polkadot/types/extrinsic/signedExtensions/types';
 import type { Registry } from '@polkadot/types/types';
 
 export interface Chain {
