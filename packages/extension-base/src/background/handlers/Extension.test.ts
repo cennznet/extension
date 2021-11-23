@@ -8,6 +8,7 @@ import type { SignerPayloadJSON } from '@polkadot/types/types';
 
 import { ResponseSigning } from '@cennznet/extension-base/background/types';
 import { MetadataDef } from '@cennznet/extension-inject/types';
+
 import { KeyringPair } from '@polkadot/keyring/types';
 import { TypeRegistry } from '@polkadot/types';
 import keyring from '@polkadot/ui-keyring';
