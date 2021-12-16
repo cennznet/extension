@@ -7,9 +7,9 @@
   "license": "Apache-2",
   "dependencies": {
     "@babel/runtime": "^7.13.10",
-    "@cennznet/extension-base": "^0.38.2",
-    "@cennznet/extension-inject": "^0.38.2",
-    "@cennznet/extension-ui": "^0.38.2"
+    "@cennznet/extension-base": "^0.38.3",
+    "@cennznet/extension-inject": "^0.38.3",
+    "@cennznet/extension-ui": "^0.38.3"
   },
   "devDependencies": {
     "@polkadot/dev": "^0.62.7",
