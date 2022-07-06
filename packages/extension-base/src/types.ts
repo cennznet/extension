@@ -10,3 +10,8 @@ export interface Message extends MessageEvent {
     subscription?: string;
   }
 }
+
+export interface Balances {
+  cennz: number,
+  cpay: number,
+}

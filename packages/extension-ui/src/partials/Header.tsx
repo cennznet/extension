@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useRef, useState } from 'react';
 import styled from 'styled-components';
 
-import logo from '../assets/cennz.svg';
+import logo from '../assets/CENNZ.svg';
 import Link from '../components/Link';
 import useOutsideClick from '../hooks/useOutsideClick';
 import MenuAdd from './MenuAdd';

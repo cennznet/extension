@@ -3,27 +3,33 @@
 
 import type { AccountJson, AccountWithChildren } from '@cennznet/extension-base/background/types';
 import type { Chain } from '@cennznet/extension-chains/types';
-import type { IconTheme } from '@polkadot/react-identicon/types';
-import type { SettingsStruct } from '@polkadot/ui-settings/types';
-import type { KeypairType } from '@polkadot/util-crypto/types';
-import type { ThemeProps } from '../types';
+import { findAccountByAddress, findSubstrateAccount } from '@cennznet/extension-ui/util/accounts';
+import { isChainSupported } from '@cennznet/extension-base/api';
 
 import { faUsb } from '@fortawesome/free-brands-svg-icons';
-import { faCopy, faEye, faEyeSlash } from '@fortawesome/free-regular-svg-icons';
+import { faCopy, faEye, faEyeSlash, faPaperPlane } from '@fortawesome/free-regular-svg-icons';
 import { faCodeBranch, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
-import CopyToClipboard from 'react-copy-to-clipboard';
-import styled from 'styled-components';
+import type { IconTheme } from '@polkadot/react-identicon/types';
+import type { SettingsStruct } from '@polkadot/ui-settings/types';
 
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
+import type { KeypairType } from '@polkadot/util-crypto/types';
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react';
+import CopyToClipboard from 'react-copy-to-clipboard';
+import { useHistory } from 'react-router';
+import styled from 'styled-components';
+import cennzIcon from '../assets/CENNZ.svg';
+import cpayIcon from '../assets/CPAY.svg';
 
 import details from '../assets/details.svg';
+import useBalances from '../hooks/useBalances';
 import useMetadata from '../hooks/useMetadata';
 import useOutsideClick from '../hooks/useOutsideClick';
 import useToast from '../hooks/useToast';
 import useTranslation from '../hooks/useTranslation';
 import { showAccount } from '../messaging';
+import type { ThemeProps } from '../types';
 import { DEFAULT_TYPE } from '../util/defaultType';
 import getParentNameSuri from '../util/getParentNameSuri';
 import { AccountContext, SettingsContext } from './contexts';
@@ -43,6 +49,7 @@ export interface Props {
   name?: string | null;
   parentName?: string | null;
   suri?: string;
+  showBalances?: boolean
   toggleActions?: number;
   type?: KeypairType;
 }
@@ -53,22 +60,6 @@ interface Recoded {
   genesisHash?: string | null;
   prefix?: number;
   type: KeypairType;
-}
-
-// find an account in our list
-function findSubstrateAccount (accounts: AccountJson[], publicKey: Uint8Array): AccountJson | null {
-  const pkStr = publicKey.toString();
-
-  return accounts.find(({ address }): boolean =>
-    decodeAddress(address).toString() === pkStr
-  ) || null;
-}
-
-// find an account in our list
-function findAccountByAddress (accounts: AccountJson[], _address: string): AccountJson | null {
-  return accounts.find(({ address }): boolean =>
-    address === _address
-  ) || null;
 }
 
 // recodes an supplied address using the prefix/genesisHash, include the actual saved account & chain
@@ -93,7 +84,7 @@ function recodeAddress (address: string, accounts: AccountWithChildren[], chain:
 const ACCOUNTS_SCREEN_HEIGHT = 550;
 const defaultRecoded = { account: null, formatted: null, prefix: 42, type: DEFAULT_TYPE };
 
-function Address ({ actions, address, children, className, genesisHash, isExternal, isHardware, isHidden, name, parentName, suri, toggleActions, type: givenType }: Props): React.ReactElement<Props> {
+function Address ({ actions, address, children, className, genesisHash, isExternal, isHardware, isHidden, name, parentName, showBalances, suri, toggleActions, type: givenType }: Props): React.ReactElement<Props> {
   const { t } = useTranslation();
   const { accounts } = useContext(AccountContext);
   const settings = useContext(SettingsContext);
@@ -103,6 +94,10 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   const [moveMenuUp, setIsMovedMenu] = useState(false);
   const actionsRef = useRef<HTMLDivElement>(null);
   const { show } = useToast();
+  const [cennzBalance, setCennzBalance] = useState(0);
+  const [cpayBalance, setCpayBalance] = useState(0);
+  const history = useHistory();
+  const balances = useBalances(address, genesisHash);
 
   useOutsideClick(actionsRef, () => (showActionsMenu && setShowActionsMenu(!showActionsMenu)));
 
@@ -136,6 +131,13 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
   useEffect((): void => {
     setShowActionsMenu(false);
   }, [toggleActions]);
+
+  useEffect((): void => {
+    if (showBalances && balances) {
+      setCennzBalance(balances.cennz);
+      setCpayBalance(balances.cpay);
+    }
+  }, [showBalances, balances])
 
   const theme = 'beachball' as IconTheme;
 
@@ -255,7 +257,32 @@ function Address ({ actions, address, children, className, genesisHash, isExtern
                 title={t('account visibility')}
               />
             )}
+            {showBalances && isChainSupported(genesisHash) && (
+              <FontAwesomeIcon
+                className='transferIcon'
+                icon={faPaperPlane}
+                onClick={(): void => history.push(`/account/transfer/${address}`)}
+                size='sm'
+                title={t('transfer')}
+              />
+            )}
           </div>
+          {showBalances && isChainSupported(genesisHash) && (
+            <div className='balanceDisplay'>
+            <div className='balanceContainer'>
+              <div className='currencyIcon'>
+                <img src={cennzIcon} alt='CENNZ'/>
+              </div>
+              <span className='balance' data-field='cennz-balance'>{cennzBalance.toLocaleString()} CENNZ</span>
+            </div>
+            <div className='balanceContainer'>
+              <div className='currencyIcon'>
+                <img src={cpayIcon} alt='CPAY'/>
+              </div>
+              <span className='balance' data-field='cpay-balance'>{cpayBalance.toLocaleString()} CPAY</span>
+            </div>
+          </div>
+          )}
         </div>
         {actions && (
           <>
@@ -326,7 +353,7 @@ export default styled(Address)(({ theme }: ThemeProps) => `
 
     .hiddenIcon, .visibleIcon {
       position: absolute;
-      right: 2px;
+      right: 0;
       top: -18px;
     }
 
@@ -334,6 +361,39 @@ export default styled(Address)(({ theme }: ThemeProps) => `
       color: ${theme.errorColor};
       &:hover {
         color: ${theme.accountDotsIconColor};
+      }
+    }
+
+    .transferIcon {
+      position: absolute;
+      right: 0;
+      top: 22px;
+    }
+  }
+
+  .balanceDisplay {
+    display: flex;
+    justify-content: space-between;
+    position: relative;
+    margin-right: 25px;
+
+    .balanceContainer {
+      display: flex;
+      align-items: center;
+      width: 50%;
+      margin-top: 2px;
+      font-size: 14px;
+      white-space: nowrap;
+
+      .currencyIcon {
+        margin-right: 5px;
+
+        img {
+          width: 24px;
+          height: 24px;
+          vertical-align: middle;
+          transform: translateY(-2px);
+        }
       }
     }
   }
@@ -345,7 +405,7 @@ export default styled(Address)(({ theme }: ThemeProps) => `
   }
 
   .identityIcon {
-    margin-left: 15px;
+    margin-left: 7px;
     margin-right: 10px;
 
     & svg {
@@ -363,7 +423,7 @@ export default styled(Address)(({ theme }: ThemeProps) => `
     flex-direction: row;
     justify-content: flex-start;
     align-items: center;
-    height: 72px;
+    height: 90px;
     border-radius: 4px;
   }
 

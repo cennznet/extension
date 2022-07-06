@@ -1,8 +1,26 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@cennznet/extension-base/background/types';
-import type { Message } from '@cennznet/extension-base/types';
+import type {
+  AccountJson,
+  AllowedPath,
+  AuthorizeRequest,
+  MessageTypes,
+  MessageTypesWithNoSubscriptions,
+  MessageTypesWithNullRequest,
+  MessageTypesWithSubscriptions,
+  MetadataRequest,
+  RequestTypes,
+  ResponseAuthorizeList,
+  ResponseDeriveValidate,
+  ResponseJsonGetAccountInfo,
+  ResponseSigningIsLocked,
+  ResponseTypes,
+  SeedLengths,
+  SigningRequest,
+  SubscriptionMessageTypes,
+} from '@cennznet/extension-base/background/types';
+import type { Balances, Message } from '@cennznet/extension-base/types';
 import type { Chain } from '@cennznet/extension-chains/types';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
@@ -55,9 +73,9 @@ port.onMessage.addListener((data: Message['data']): void => {
   }
 });
 
-function sendMessage<TMessageType extends MessageTypesWithNullRequest>(message: TMessageType): Promise<ResponseTypes[TMessageType]>;
-function sendMessage<TMessageType extends MessageTypesWithNoSubscriptions>(message: TMessageType, request: RequestTypes[TMessageType]): Promise<ResponseTypes[TMessageType]>;
-function sendMessage<TMessageType extends MessageTypesWithSubscriptions>(message: TMessageType, request: RequestTypes[TMessageType], subscriber: (data: SubscriptionMessageTypes[TMessageType]) => void): Promise<ResponseTypes[TMessageType]>;
+function sendMessage<TMessageType extends MessageTypesWithNullRequest> (message: TMessageType): Promise<ResponseTypes[TMessageType]>;
+function sendMessage<TMessageType extends MessageTypesWithNoSubscriptions> (message: TMessageType, request: RequestTypes[TMessageType]): Promise<ResponseTypes[TMessageType]>;
+function sendMessage<TMessageType extends MessageTypesWithSubscriptions> (message: TMessageType, request: RequestTypes[TMessageType], subscriber: (data: SubscriptionMessageTypes[TMessageType]) => void): Promise<ResponseTypes[TMessageType]>;
 function sendMessage<TMessageType extends MessageTypes> (message: TMessageType, request?: RequestTypes[TMessageType], subscriber?: (data: unknown) => void): Promise<ResponseTypes[TMessageType]> {
   return new Promise((resolve, reject): void => {
     const id = `${Date.now()}.${++idCounter}`;
@@ -125,7 +143,14 @@ export async function createAccountExternal (name: string, address: string, gene
 }
 
 export async function createAccountHardware (address: string, hardwareType: string, accountIndex: number, addressOffset: number, name: string, genesisHash: string): Promise<boolean> {
-  return sendMessage('pri(accounts.create.hardware)', { accountIndex, address, addressOffset, genesisHash, hardwareType, name });
+  return sendMessage('pri(accounts.create.hardware)', {
+    accountIndex,
+    address,
+    addressOffset,
+    genesisHash,
+    hardwareType,
+    name,
+  });
 }
 
 export async function createAccountSuri (name: string, password: string, suri: string, type?: KeypairType, genesisHash?: string): Promise<boolean> {
@@ -185,7 +210,7 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
         specVersion: 0,
         tokenDecimals: 15,
         tokenSymbol: 'Unit',
-        types: {}
+        types: {},
       }, isPartial);
     }
   }
@@ -251,4 +276,20 @@ export async function jsonRestore (file: KeyringPair$Json, password: string): Pr
 
 export async function batchRestore (file: KeyringPairs$Json, password: string): Promise<void> {
   return sendMessage('pri(json.batchRestore)', { file, password });
+}
+
+export async function getBalances (address: string, genesisHash: string): Promise<Balances> {
+  return sendMessage('pri(balances.get)', { address, genesisHash });
+}
+
+export async function getStoredBalances (address: string, genesisHash: string): Promise<Balances> {
+  return sendMessage('pri(balances.get.stored)', { address, genesisHash });
+}
+
+export async function saveBalances (address: string, genesisHash: string, balances: Balances): Promise<void> {
+  return sendMessage('pri(balances.save)', { address, genesisHash, balances });
+}
+
+export async function transfer (genesisHash: string, fromAddress: string, toAddress: string, assetType: string, amount: string, password: string): Promise<string> {
+  return sendMessage('pri(accounts.transfer)', { genesisHash, fromAddress, toAddress, assetType, amount, password });
 }

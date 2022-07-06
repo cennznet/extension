@@ -25,7 +25,7 @@ function Identicon ({ className, iconTheme, onCopy, prefix, value }: Props): Rea
         className='icon'
         onCopy={onCopy}
         prefix={prefix}
-        size={64}
+        size={70}
         theme={iconTheme}
         value={value}
       />

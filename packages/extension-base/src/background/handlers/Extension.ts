@@ -1,11 +1,13 @@
 // Copyright 2019-2021 @polkadot/extension authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { Balances } from '@cennznet/extension-base/types';
 import type { MetadataDef } from '@cennznet/extension-inject/types';
 import type { KeyringPair, KeyringPair$Json, KeyringPair$Meta } from '@polkadot/keyring/types';
 import type { SignerPayloadJSON, SignerPayloadRaw } from '@polkadot/types/types';
 import type { SubjectInfo } from '@polkadot/ui-keyring/observable/types';
-import type { AccountJson,
+import type {
+  AccountJson,
   AllowedPath,
   AuthorizeRequest,
   MessageTypes,
@@ -23,6 +25,8 @@ import type { AccountJson,
   RequestAccountValidate,
   RequestAuthorizeApprove,
   RequestAuthorizeReject,
+  RequestBalancesGet,
+  RequestBalancesSave,
   RequestBatchRestore,
   RequestDeriveCreate,
   RequestDeriveValidate,
@@ -35,6 +39,7 @@ import type { AccountJson,
   RequestSigningApproveSignature,
   RequestSigningCancel,
   RequestSigningIsLocked,
+  RequestTransfer,
   RequestTypes,
   ResponseAccountExport,
   ResponseAuthorizeList,
@@ -44,7 +49,8 @@ import type { AccountJson,
   ResponseSeedValidate,
   ResponseSigningIsLocked,
   ResponseType,
-  SigningRequest } from '../types';
+  SigningRequest,
+} from '../types';
 
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@cennznet/extension-base/defaults';
 import chrome from '@cennznet/extension-inject/chrome';
@@ -57,6 +63,7 @@ import { keyExtractSuri, mnemonicGenerate, mnemonicValidate } from '@polkadot/ut
 
 import State from './State';
 import { createSubscription, unsubscribe } from './subscriptions';
+import { getBalances, transfer } from '../../api';
 
 type CachedUnlocks = Record<string, number>;
 
@@ -70,7 +77,7 @@ function transformAccounts (accounts: SubjectInfo): AccountJson[] {
   return Object.values(accounts).map(({ json: { address, meta }, type }): AccountJson => ({
     address,
     ...meta,
-    type
+    type,
   }));
 }
 
@@ -94,7 +101,14 @@ export default class Extension {
     return true;
   }
 
-  private accountsCreateHardware ({ accountIndex, address, addressOffset, genesisHash, hardwareType, name }: RequestAccountCreateHardware): boolean {
+  private accountsCreateHardware ({
+                                    accountIndex,
+                                    address,
+                                    addressOffset,
+                                    genesisHash,
+                                    hardwareType,
+                                    name,
+                                  }: RequestAccountCreateHardware): boolean {
     keyring.addHardware(address, hardwareType, { accountIndex, addressOffset, genesisHash, name });
 
     return true;
@@ -140,11 +154,14 @@ export default class Extension {
     return { exportedJson: JSON.stringify(keyring.backupAccount(keyring.getPair(address), password)) };
   }
 
-  private async accountsBatchExport ({ addresses, password }: RequestAccountBatchExport): Promise<ResponseAccountExport> {
+  private async accountsBatchExport ({
+                                       addresses,
+                                       password,
+                                     }: RequestAccountBatchExport): Promise<ResponseAccountExport> {
     return {
       exportedJson: JSON.stringify(
-        await keyring.backupAccounts(addresses, password)
-      )
+        await keyring.backupAccounts(addresses, password),
+      ),
     };
   }
 
@@ -204,7 +221,7 @@ export default class Extension {
   private accountsSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(accounts.subscribe)'>(id, port);
     const subscription = accountsObservable.subject.subscribe((accounts: SubjectInfo): void =>
-      cb(transformAccounts(accounts))
+      cb(transformAccounts(accounts)),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -247,7 +264,7 @@ export default class Extension {
   private authorizeSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(authorize.requests)'>(id, port);
     const subscription = this.#state.authSubject.subscribe((requests: AuthorizeRequest[]): void =>
-      cb(requests)
+      cb(requests),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -299,7 +316,7 @@ export default class Extension {
   private metadataSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(metadata.requests)'>(id, port);
     const subscription = this.#state.metaSubject.subscribe((requests: MetadataRequest[]): void =>
-      cb(requests)
+      cb(requests),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -334,7 +351,7 @@ export default class Extension {
         address,
         genesisHash,
         name,
-        type
+        type,
       } as ResponseJsonGetAccountInfo;
     } catch (e) {
       console.error(e);
@@ -347,7 +364,7 @@ export default class Extension {
 
     return {
       address: keyring.createFromUri(seed, {}, type).address,
-      seed
+      seed,
     };
   }
 
@@ -364,7 +381,7 @@ export default class Extension {
 
     return {
       address: keyring.createFromUri(suri, {}, type).address,
-      suri
+      suri,
     };
   }
 
@@ -423,7 +440,7 @@ export default class Extension {
 
     resolve({
       id,
-      ...result
+      ...result,
     });
 
     return true;
@@ -467,7 +484,7 @@ export default class Extension {
 
     return {
       isLocked: pair.isLocked,
-      remainingTime
+      remainingTime,
     };
   }
 
@@ -475,7 +492,7 @@ export default class Extension {
   private signingSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(signing.requests)'>(id, port);
     const subscription = this.#state.signSubject.subscribe((requests: SigningRequest[]): void =>
-      cb(requests)
+      cb(requests),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -522,16 +539,23 @@ export default class Extension {
 
     return {
       address: childPair.address,
-      suri
+      suri,
     };
   }
 
-  private derivationCreate ({ genesisHash, name, parentAddress, parentPassword, password, suri }: RequestDeriveCreate): boolean {
+  private derivationCreate ({
+                              genesisHash,
+                              name,
+                              parentAddress,
+                              parentPassword,
+                              password,
+                              suri,
+                            }: RequestDeriveCreate): boolean {
     const childPair = this.derive(parentAddress, suri, parentPassword, {
       genesisHash,
       name,
       parentAddress,
-      suri
+      suri,
     });
 
     keyring.addPair(childPair, password);
@@ -541,6 +565,22 @@ export default class Extension {
 
   private toggleAuthorization (url: string): ResponseAuthorizeList {
     return { list: this.#state.toggleAuthorization(url) };
+  }
+
+  private getBalances (request: RequestBalancesGet): Promise<Balances | null> {
+    return getBalances(request.address, request.genesisHash);
+  }
+
+  private getStoredBalances (request: RequestBalancesGet): Balances {
+    return this.#state.getBalances(request.address, request.genesisHash);
+  }
+
+  private saveBalances (request: RequestBalancesSave) {
+    this.#state.saveBalances(request.address, request.genesisHash, request.balances);
+  }
+
+  private transfer (request: RequestTransfer): Promise<string> {
+    return transfer(request.genesisHash, request.fromAddress, request.toAddress, request.assetType, request.amount, request.password, keyring);
   }
 
   // Weird thought, the eslint override is not needed in Tabs
@@ -595,8 +635,20 @@ export default class Extension {
       case 'pri(accounts.tie)':
         return this.accountsTie(request as RequestAccountTie);
 
+      case 'pri(accounts.transfer)':
+        return this.transfer(request as RequestTransfer);
+
       case 'pri(accounts.validate)':
         return this.accountsValidate(request as RequestAccountValidate);
+
+      case 'pri(balances.get)':
+        return this.getBalances(request as RequestBalancesGet);
+
+      case 'pri(balances.get.stored)':
+        return this.getStoredBalances(request as RequestBalancesGet);
+
+      case 'pri(balances.save)':
+        return this.saveBalances(request as RequestBalancesSave);
 
       case 'pri(metadata.approve)':
         return this.metadataApprove(request as RequestMetadataApprove);

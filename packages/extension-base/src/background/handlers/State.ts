@@ -11,7 +11,9 @@ import { BehaviorSubject } from 'rxjs';
 
 import { assert } from '@polkadot/util';
 
-import { MetadataStore } from '../../stores';
+import { addBalances, getStoredBalances } from '../../api/balances';
+import { BalancesStore, MetadataStore } from '../../stores';
+import { Balances } from '../../types';
 
 interface Resolver <T> {
   reject: (error: Error) => void;
@@ -83,6 +85,8 @@ export default class State {
 
   readonly #metaStore = new MetadataStore();
 
+  readonly #balancesStore = new BalancesStore();
+
   // Map of providers currently injected in tabs
   readonly #injectedProviders = new Map<chrome.runtime.Port, ProviderInterface>();
 
@@ -106,6 +110,10 @@ export default class State {
 
     this.#metaStore.all((_key: string, def: MetadataDef): void => {
       addMetadata(def);
+    });
+
+    this.#balancesStore.all((addressAndHash: string, balances: Balances) => {
+      addBalances(addressAndHash, balances);
     });
 
     // retrieve previously set authorizations
@@ -427,6 +435,16 @@ export default class State {
     this.#metaStore.set(meta.genesisHash, meta);
 
     addMetadata(meta);
+  }
+
+  public getBalances (address: string, genesisHash: string): Balances {
+    return getStoredBalances(address, genesisHash);
+  }
+
+  public saveBalances (address: string, genesisHash: string, balances: Balances) {
+    const key = `${address}_${genesisHash}`;
+
+    this.#balancesStore.set(key, balances);
   }
 
   public sign (url: string, request: RequestSign, account: AccountJson): Promise<ResponseSigning> {
