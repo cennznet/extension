@@ -4,11 +4,11 @@
 import type { AccountJson, AccountsContext, AuthorizeRequest, MetadataRequest, SigningRequest } from '@cennznet/extension-base/background/types';
 import type { SettingsStruct } from '@polkadot/ui-settings/types';
 
+import { PHISHING_PAGE_REDIRECT } from '@cennznet/extension-base/defaults';
+import { canDerive } from '@cennznet/extension-base/utils';
 import React, { useEffect, useState } from 'react';
 import { Route, Switch } from 'react-router';
 
-import { PHISHING_PAGE_REDIRECT } from '@cennznet/extension-base/defaults';
-import { canDerive } from '@cennznet/extension-base/utils';
 import uiSettings from '@polkadot/ui-settings';
 
 import { ErrorBoundary, Loading } from '../components';

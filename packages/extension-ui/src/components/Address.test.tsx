@@ -3,8 +3,8 @@
 
 import '../../../../__mocks__/chrome';
 
-import type { ReactWrapper } from 'enzyme';
 import type { AccountJson } from '@cennznet/extension-base/background/types';
+import type { ReactWrapper } from 'enzyme';
 import type { IconTheme } from '@polkadot/react-identicon/types';
 import type { Props as AddressComponentProps } from './Address';
 
@@ -35,10 +35,10 @@ interface AccountTestGenesisJson extends AccountTestJson {
   genesisHash: string;
 }
 
-const externalAccount = { address: '5EeaoDj4VDk8V6yQngKBaCD5MpJUCHrhYjVhBjgMHXoYon1s', expectedIconTheme: 'polkadot', isExternal: true, name: 'External Account', type: 'sr25519' } as AccountJson;
+const externalAccount = { address: '5EeaoDj4VDk8V6yQngKBaCD5MpJUCHrhYjVhBjgMHXoYon1s', expectedIconTheme: 'beachball', isExternal: true, name: 'External Account', type: 'sr25519' } as AccountJson;
 const hardwareAccount = {
   address: 'HDE6uFdw53SwUyfKSsjwZNmS2sziWMPuY6uJhGHcFzLYRaJ',
-  expectedIconTheme: 'polkadot',
+  expectedIconTheme: 'beachball',
   // Kusama genesis hash
   genesisHash: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe',
   isExternal: true,
@@ -48,10 +48,10 @@ const hardwareAccount = {
 } as AccountJson;
 
 const accounts = [
-  { address: '5HSDXAC3qEMkSzZK377sTD1zJhjaPiX5tNWppHx2RQMYkjaJ', expectedIconTheme: 'polkadot', name: 'ECDSA Account', type: 'ecdsa' },
-  { address: '5FjgD3Ns2UpnHJPVeRViMhCttuemaRXEqaD8V5z4vxcsUByA', expectedIconTheme: 'polkadot', name: 'Ed Account', type: 'ed25519' },
-  { address: '5Ggap6soAPaP5UeNaiJsgqQwdVhhNnm6ez7Ba1w9jJ62LM2Q', expectedIconTheme: 'polkadot', name: 'Parent Sr Account', type: 'sr25519' },
-  { address: '0xd5D81CD4236a43F48A983fc5B895975c511f634D', expectedIconTheme: 'ethereum', name: 'Ethereum', type: 'ethereum' },
+  { address: '5HSDXAC3qEMkSzZK377sTD1zJhjaPiX5tNWppHx2RQMYkjaJ', expectedIconTheme: 'beachball', name: 'ECDSA Account', type: 'ecdsa' },
+  { address: '5FjgD3Ns2UpnHJPVeRViMhCttuemaRXEqaD8V5z4vxcsUByA', expectedIconTheme: 'beachball', name: 'Ed Account', type: 'ed25519' },
+  { address: '5Ggap6soAPaP5UeNaiJsgqQwdVhhNnm6ez7Ba1w9jJ62LM2Q', expectedIconTheme: 'beachball', name: 'Parent Sr Account', type: 'sr25519' },
+  // { address: '0xd5D81CD4236a43F48A983fc5B895975c511f634D', expectedIconTheme: 'beachball', name: 'Ethereum', type: 'ethereum' },
   { ...externalAccount },
   { ...hardwareAccount }
 ] as AccountTestJson[];
@@ -62,8 +62,8 @@ const accounts = [
 const westEndAccount = {
   address: 'Cs2LLqQ6DSRx8UPdVp6jny4DvwNqziBSowSu5Nb1u3R6Z7X',
   expectedEncodedAddress: '5CMQg2VXTrRWCUewro13qqc45Lf93KtzzS6hWR6dY6pvMZNF',
-  expectedIconTheme: 'polkadot',
-  expectedNetworkLabel: 'Westend',
+  expectedIconTheme: 'beachball',
+  expectedNetworkLabel: 'beachball',
   genesisHash: '0xe143f23803ac50e8f6f8e62695d1ce9e4e1d68aa36c1cd2cfd15340213f3423e',
   name: 'acc',
   type: 'ed25519'
@@ -74,7 +74,7 @@ const accountsWithGenesisHash = [
   {
     address: '5Ggap6soAPaP5UeNaiJsgqQwdVhhNnm6ez7Ba1w9jJ62LM2Q',
     expectedEncodedAddress: '15csxS8s2AqrX1etYMMspzF6V7hM56KEjUqfjJvWHP7YWkoF',
-    expectedIconTheme: 'polkadot',
+    expectedIconTheme: 'beachball',
     expectedNetworkLabel: 'Polkadot',
     genesisHash: '0x91b171bb158e2d3848fa23a9f1c25182fb8e20313b2c1eb49219da7a70ce90c3',
     type: 'sr25519'
@@ -83,20 +83,20 @@ const accountsWithGenesisHash = [
   {
     address: '5DoYawpxt6aBy1pKAt1beLMrakqtbWMtG3NF6jwRR8uKJGqD',
     expectedEncodedAddress: 'EKAFGAqWTb7ifdkwapeYHirjM88QBB4iRCzVQDNtw7p3bgF',
-    expectedIconTheme: 'polkadot',
+    expectedIconTheme: 'beachball',
     expectedNetworkLabel: 'Kusama',
     genesisHash: '0xb0a8d493285c2df73290dfb7e61f870f17b41801197a149ca93654499ea3dafe',
     type: 'sr25519'
-  },
-  // with Edgeware genesis Hash
-  {
-    address: '5GYQRJj3NUznYDzCduENRcocMsyxmb6tjb5xW87ZMErBe9R7',
-    expectedEncodedAddress: 'mzKNamvvJPM5ApxwGSYD5VjjtyfrB4g8fhMyCc29K37nuop',
-    expectedIconTheme: 'substrate',
-    expectedNetworkLabel: 'Edgeware',
-    genesisHash: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b',
-    type: 'sr25519'
   }
+  // // with Edgeware genesis Hash
+  // {
+  //   address: '5GYQRJj3NUznYDzCduENRcocMsyxmb6tjb5xW87ZMErBe9R7',
+  //   expectedEncodedAddress: 'mzKNamvvJPM5ApxwGSYD5VjjtyfrB4g8fhMyCc29K37nuop',
+  //   expectedIconTheme: 'substrate',
+  //   expectedNetworkLabel: 'Edgeware',
+  //   genesisHash: '0x742a2ca70c2fda6cee4f8df98d64c4c670a052d9568058982dad9d5a7a135c5b',
+  //   type: 'sr25519'
+  // }
 ] as AccountTestGenesisJson[];
 
 const mountComponent = async (addressComponentProps: AddressComponentProps, contextAccounts: AccountJson[]): Promise<{

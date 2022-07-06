@@ -7,6 +7,7 @@ import handlers from '@cennznet/extension-base/background/handlers';
 import { PORT_CONTENT, PORT_EXTENSION } from '@cennznet/extension-base/defaults';
 import { AccountsStore } from '@cennznet/extension-base/stores';
 import chrome from '@cennznet/extension-inject/chrome';
+
 import keyring from '@polkadot/ui-keyring';
 import { assert } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';

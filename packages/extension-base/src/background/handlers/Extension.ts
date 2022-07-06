@@ -54,6 +54,7 @@ import type {
 
 import { ALLOWED_PATH, PASSWORD_EXPIRY_MS } from '@cennznet/extension-base/defaults';
 import chrome from '@cennznet/extension-inject/chrome';
+
 import { TypeRegistry } from '@polkadot/types';
 import keyring from '@polkadot/ui-keyring';
 import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';
@@ -76,7 +77,7 @@ function transformAccounts (accounts: SubjectInfo): AccountJson[] {
   return Object.values(accounts).map(({ json: { address, meta }, type }): AccountJson => ({
     address,
     ...meta,
-    type
+    type,
   }));
 }
 
@@ -100,7 +101,14 @@ export default class Extension {
     return true;
   }
 
-  private accountsCreateHardware ({ accountIndex, address, addressOffset, genesisHash, hardwareType, name }: RequestAccountCreateHardware): boolean {
+  private accountsCreateHardware ({
+                                    accountIndex,
+                                    address,
+                                    addressOffset,
+                                    genesisHash,
+                                    hardwareType,
+                                    name,
+                                  }: RequestAccountCreateHardware): boolean {
     keyring.addHardware(address, hardwareType, { accountIndex, addressOffset, genesisHash, name });
 
     return true;
@@ -146,11 +154,14 @@ export default class Extension {
     return { exportedJson: JSON.stringify(keyring.backupAccount(keyring.getPair(address), password)) };
   }
 
-  private async accountsBatchExport ({ addresses, password }: RequestAccountBatchExport): Promise<ResponseAccountExport> {
+  private async accountsBatchExport ({
+                                       addresses,
+                                       password,
+                                     }: RequestAccountBatchExport): Promise<ResponseAccountExport> {
     return {
       exportedJson: JSON.stringify(
-        await keyring.backupAccounts(addresses, password)
-      )
+        await keyring.backupAccounts(addresses, password),
+      ),
     };
   }
 
@@ -210,7 +221,7 @@ export default class Extension {
   private accountsSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(accounts.subscribe)'>(id, port);
     const subscription = accountsObservable.subject.subscribe((accounts: SubjectInfo): void =>
-      cb(transformAccounts(accounts))
+      cb(transformAccounts(accounts)),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -253,7 +264,7 @@ export default class Extension {
   private authorizeSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(authorize.requests)'>(id, port);
     const subscription = this.#state.authSubject.subscribe((requests: AuthorizeRequest[]): void =>
-      cb(requests)
+      cb(requests),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -305,7 +316,7 @@ export default class Extension {
   private metadataSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(metadata.requests)'>(id, port);
     const subscription = this.#state.metaSubject.subscribe((requests: MetadataRequest[]): void =>
-      cb(requests)
+      cb(requests),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -340,7 +351,7 @@ export default class Extension {
         address,
         genesisHash,
         name,
-        type
+        type,
       } as ResponseJsonGetAccountInfo;
     } catch (e) {
       console.error(e);
@@ -353,7 +364,7 @@ export default class Extension {
 
     return {
       address: keyring.createFromUri(seed, {}, type).address,
-      seed
+      seed,
     };
   }
 
@@ -370,7 +381,7 @@ export default class Extension {
 
     return {
       address: keyring.createFromUri(suri, {}, type).address,
-      suri
+      suri,
     };
   }
 
@@ -429,7 +440,7 @@ export default class Extension {
 
     resolve({
       id,
-      ...result
+      ...result,
     });
 
     return true;
@@ -473,7 +484,7 @@ export default class Extension {
 
     return {
       isLocked: pair.isLocked,
-      remainingTime
+      remainingTime,
     };
   }
 
@@ -481,7 +492,7 @@ export default class Extension {
   private signingSubscribe (id: string, port: chrome.runtime.Port): boolean {
     const cb = createSubscription<'pri(signing.requests)'>(id, port);
     const subscription = this.#state.signSubject.subscribe((requests: SigningRequest[]): void =>
-      cb(requests)
+      cb(requests),
     );
 
     port.onDisconnect.addListener((): void => {
@@ -528,16 +539,23 @@ export default class Extension {
 
     return {
       address: childPair.address,
-      suri
+      suri,
     };
   }
 
-  private derivationCreate ({ genesisHash, name, parentAddress, parentPassword, password, suri }: RequestDeriveCreate): boolean {
+  private derivationCreate ({
+                              genesisHash,
+                              name,
+                              parentAddress,
+                              parentPassword,
+                              password,
+                              suri,
+                            }: RequestDeriveCreate): boolean {
     const childPair = this.derive(parentAddress, suri, parentPassword, {
       genesisHash,
       name,
       parentAddress,
-      suri
+      suri,
     });
 
     keyring.addPair(childPair, password);

@@ -1,7 +1,7 @@
 {
   "name": "@cennznet/extension-base",
   "description": "Functions, classes and other utilities used in @polkadot/extension",
-  "version": "0.38.2",
+  "version": "0.38.3",
   "type": "module",
   "author": "Jaco Greeff <jacogr@gmail.com>",
   "license": "Apache-2",
@@ -10,11 +10,11 @@
   "dependencies": {
     "@babel/runtime": "^7.13.10",
     "@cennznet/api": "^1.4.2",
-    "@cennznet/extension-inject": "^0.38.2",
+    "@cennznet/extension-inject": "^0.38.3",
     "@cennznet/util": "^1.5.0-alpha.1",
-    "@polkadot/api": "^3.7.1",
+    "@polkadot/api": "^4.4.1",
     "@polkadot/keyring": "^6.0.5",
     "@polkadot/phishing": "^0.6.72",
-    "@polkadot/ui-keyring": "^0.72.1"
+    "@polkadot/ui-keyring": "^0.73.1"
   }
 }

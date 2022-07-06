@@ -1,8 +1,8 @@
 // Copyright 2019-2021 @polkadot/extension-dapp authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { Signer } from '@polkadot/api/types';
 import type { Injected, InjectedAccount, InjectedWindow } from '@cennznet/extension-inject/types';
+import type { Signer } from '@polkadot/api/types';
 
 // RxJs interface, only the bare-bones of what we need here
 interface Subscriber<T> {

@@ -3,18 +3,17 @@
 
 import type { AccountJson } from '@cennznet/extension-base/background/types';
 
+import { canDerive } from '@cennznet/extension-base/utils';
+import defaultConfig from '@cennznet/extension-chains/config';
+import { ThemeProps } from '@cennznet/extension-ui/types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
-
-import { canDerive } from '@cennznet/extension-base/utils';
-import { ThemeProps } from '@cennznet/extension-ui/types';
 
 import { Address, Dropdown, Link, MenuDivider } from '../../components';
 import useGenesisHashOptions from '../../hooks/useGenesisHashOptions';
 import useTranslation from '../../hooks/useTranslation';
 import { editAccount, tieAccount } from '../../messaging';
 import { Name } from '../../partials';
-import defaultConfig from "@cennznet/extension-chains/config";
 
 interface Props extends AccountJson {
   className?: string;
@@ -31,7 +30,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
   const [{ isEditing, toggleActions }, setEditing] = useState<EditState>({ isEditing: false, toggleActions: 0 });
   const [editedName, setName] = useState<string | undefined | null>(name);
   const genesisOptions = useGenesisHashOptions();
-  const nikauChain = defaultConfig.CENNZNetChain.find(blkChain => blkChain.chain === 'CENNZnet Nikau');
+  const nikauChain = defaultConfig.CENNZNetChain.find((blkChain) => blkChain.chain === 'CENNZnet Nikau');
 
   const _onChangeGenesis = useCallback(
     (genesisHash?: string | null): void => {
@@ -74,8 +73,9 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         </Link>
       )}
       <a className='menuItem'
-         href={genesisHash === nikauChain?.genesisHash ? `https://uncoverexplorer.com/account/${address}?network=Nikau` : `https://uncoverexplorer.com/account/${address}`}
-         target="_blank"
+        href={genesisHash === nikauChain?.genesisHash ? `https://uncoverexplorer.com/account/${address}?network=Nikau` : `https://uncoverexplorer.com/account/${address}`}
+        rel='noreferrer'
+        target='_blank'
       >
         {t<string>('View on UNcover')}
       </a>
@@ -111,7 +111,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
         </>
       )}
     </>
-  ), [_onChangeGenesis, _toggleEdit, address, genesisHash, genesisOptions, isExternal, isHardware, t, type]);
+  ), [_onChangeGenesis, _toggleEdit, address, genesisHash, genesisOptions, isExternal, isHardware, t, type, nikauChain]);
 
   return (
     <div className={className}>

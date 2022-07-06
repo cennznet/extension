@@ -10,6 +10,7 @@ import type { MessageTypes, RequestAccountList, RequestAuthorizeTab, RequestRpcS
 
 import { PHISHING_PAGE_REDIRECT } from '@cennznet/extension-base/defaults';
 import { canDerive } from '@cennznet/extension-base/utils';
+
 import { checkIfDenied } from '@polkadot/phishing';
 import keyring from '@polkadot/ui-keyring';
 import { accounts as accountsObservable } from '@polkadot/ui-keyring/observable/accounts';

@@ -30,10 +30,10 @@ import { PORT_EXTENSION } from '@cennznet/extension-base/defaults';
 import { getLatestMetaFromServer, getLatestTypesFromServer, metadataExpand } from '@cennznet/extension-chains';
 import chrome from '@cennznet/extension-inject/chrome';
 import { MetadataDef } from '@cennznet/extension-inject/types';
+import BN from 'bn.js';
 
 import allChains from './util/chains';
 import { getSavedMeta, setSavedMeta } from './MetadataCache';
-import BN from 'bn.js';
 
 interface Handler {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -178,22 +178,28 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
   }
 
   const def = await request;
+
   if (def) {
     const specVersionInState = def.specVersion;
+
     // when spec version is not the latest, fetch latest and updated state with latest metadata
     if (specVersion && !specVersion.eqn(specVersionInState)) {
       const metaDataInfo = getLatestMetaFromServer(genesisHash);
       const additionalTypes = getLatestTypesFromServer(genesisHash);
+
       if (metaDataInfo) {
         def.specVersion = metaDataInfo.specVersion;
         def.metaCalls = metaDataInfo.metaCalls;
+
         if (additionalTypes) {
           def.types = additionalTypes.types;
           def.userExtensions = additionalTypes.userExtensions;
         }
+
         await sendMessage('pri(metadata.set)', def);
       }
     }
+
     return metadataExpand(def, isPartial);
   } else if (isPartial) {
     const chain = allChains.find((chain) => chain.genesisHash === genesisHash);

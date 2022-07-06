@@ -14,7 +14,7 @@ As it stands, it does one thing: it _only_ manages accounts and allows the signi
 
 ## Installation
 
-- On Chrome, install via [Chrome web store](https://chrome.google.com/webstore/detail/polkadot%7Bjs%7D-extension/mopnmbcafieddcagagdcbnhejhlodfdd)
+- On Chrome, install via [Chrome web store](https://chrome.google.com/webstore/detail/cennznet-extension/feckpephlmdcjnpoclagmaogngeffafk)
 - On Firefox, install via [Firefox add-ons](https://addons.mozilla.org/en-US/firefox/addon/cennznet-extension/)
 
 ![interface screenshots](docs/extension-overview.png)
