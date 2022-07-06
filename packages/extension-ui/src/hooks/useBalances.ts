@@ -10,25 +10,33 @@ import { DEFAULT_GENESIS_HASH, defaultBalances } from '@cennznet/extension-base/
 
 import { getBalances, getStoredBalances, saveBalances } from '../messaging';
 
-export default function useBalances(address?: string | null, genesisHash?: string | null): Balances | null {
+export default function useBalances (address?: string | null, genesisHash?: string | null): Balances | null {
   const _genesisHash = genesisHash || DEFAULT_GENESIS_HASH;
   const [balances, setBalances] = useState<Balances>(defaultBalances);
+  let interval: NodeJS.Timeout;
 
-  useEffect((): void => {
+  useEffect((): void | (() => void) => {
     if (!address) {
       return;
     }
 
     getStoredBalances(address, _genesisHash).then(setBalances);
 
-    getBalances(address, _genesisHash).then(async value => {
-      if (!isNull(value)) {
-        setBalances(value);
+    const update = () => {
+      getBalances(address, _genesisHash).then(async value => {
+        if (!isNull(value)) {
+          setBalances(value);
 
-        await saveBalances(address, _genesisHash, value);
-      }
-    })
-  }, [address, _genesisHash])
+          await saveBalances(address, _genesisHash, value);
+        }
+      });
+    };
+
+    update();
+    interval = setInterval(update, 10000);
+
+    return () => clearInterval(interval);
+  }, [address, _genesisHash]);
 
   return balances;
 }
