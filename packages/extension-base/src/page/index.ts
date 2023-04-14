@@ -3,8 +3,9 @@
 
 import type { MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, RequestTypes, ResponseTypes, SubscriptionMessageTypes, TransportRequestMessage, TransportResponseMessage } from '../background/types';
 
+import { MESSAGE_ORIGIN_PAGE } from '@cennznet/extension-base/defaults';
+
 import Injected from './Injected';
-import {MESSAGE_ORIGIN_PAGE} from "@cennznet/extension-base/defaults";
 
 // when sending a message from the injector to the extension, we
 //  - create an event - this we send to the loader
