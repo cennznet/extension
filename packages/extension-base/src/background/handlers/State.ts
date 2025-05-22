@@ -59,25 +59,35 @@ interface SignRequest extends Resolver<ResponseSigning> {
 
 let idCounter = 0;
 
-const WINDOW_OPTS = {
+const NOTIFICATION_URL = chrome.runtime.getURL('notification.html');
+
+const POPUP_WINDOW_OPTS = {
   // This is not allowed on FF, only on Chrome - disable completely
   // focused: true,
   height: 621,
   left: 150,
   top: 150,
   type: 'popup',
-  url: chrome.extension.getURL('notification.html'),
+  url: NOTIFICATION_URL,
   width: 560
 };
 
+const NORMAL_WINDOW_OPTS: chrome.windows.CreateData = {
+  focused: true,
+  type: 'normal',
+  url: NOTIFICATION_URL
+};
+
 const AUTH_URLS_KEY = 'authUrls';
+const DEFAULT_AUTH_ACCOUNTS = 'defaultAuthAccounts';
 
 function getId (): string {
   return `${Date.now()}.${++idCounter}`;
 }
+export const NOTIFICATION_DEFAULT = 'popup';
 
 export default class State {
-  readonly #authUrls: AuthUrls = {};
+  #authUrls: AuthUrls = {};
 
   readonly #authRequests: Record<string, AuthRequest> = {};
 
@@ -88,6 +98,8 @@ export default class State {
 
   readonly #metaRequests: Record<string, MetaRequest> = {};
 
+  #notification = NOTIFICATION_DEFAULT;
+
   // Map of all providers exposed by the extension, they are retrievable by key
   readonly #providers: Providers;
 
@@ -95,11 +107,17 @@ export default class State {
 
   #windows: number[] = [];
 
+  #connectedTabsUrl: string[] = [];
+
   public readonly authSubject: BehaviorSubject<AuthorizeRequest[]> = new BehaviorSubject<AuthorizeRequest[]>([]);
 
   public readonly metaSubject: BehaviorSubject<MetadataRequest[]> = new BehaviorSubject<MetadataRequest[]>([]);
 
   public readonly signSubject: BehaviorSubject<SigningRequest[]> = new BehaviorSubject<SigningRequest[]>([]);
+
+  public readonly authUrlSubjects: Record<string, BehaviorSubject<AuthUrlInfo>> = {};
+
+  public defaultAuthAccountSelection: string[] = [];
 
   constructor (providers: Providers = {}) {
     this.#providers = providers;
@@ -107,12 +125,29 @@ export default class State {
     this.#metaStore.all((_key: string, def: MetadataDef): void => {
       addMetadata(def);
     });
+  }
+
+  public async init () {
 
     // retrieve previously set authorizations
-    const authString = localStorage.getItem(AUTH_URLS_KEY) || '{}';
-    const previousAuth = JSON.parse(authString) as AuthUrls;
+    chrome.storage.local.get([AUTH_URLS_KEY], storageAuthUrls => {
 
-    this.#authUrls = previousAuth;
+      const authString = storageAuthUrls?.[AUTH_URLS_KEY] || '{}';
+      const previousAuth = JSON.parse(authString) as AuthUrls;
+
+      this.#authUrls = previousAuth;
+      // Initialize authUrlSubjects for each URL
+      Object.entries(previousAuth).forEach(([url, authInfo]) => {
+        this.authUrlSubjects[url] = new BehaviorSubject<AuthUrlInfo>(authInfo);
+      });
+    });
+
+    // retrieve previously set default auth accounts
+    chrome.storage.local.get([DEFAULT_AUTH_ACCOUNTS], storageDefaultAuthAccounts => {
+      const defaultAuthString: string = storageDefaultAuthAccounts?.[DEFAULT_AUTH_ACCOUNTS] || '[]';
+      const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
+      this.defaultAuthAccountSelection = previousDefaultAuth;
+    });
   }
 
   public get knownMetadata (): MetadataDef[] {
@@ -161,11 +196,16 @@ export default class State {
   }
 
   private popupOpen (): void {
-    chrome.windows.create({ ...WINDOW_OPTS }, (window?: chrome.windows.Window): void => {
-      if (window) {
-        this.#windows.push(window.id);
-      }
-    });
+    this.#notification !== 'extension' &&
+    chrome.windows.create(
+      this.#notification === 'window'
+        ? NORMAL_WINDOW_OPTS
+        : POPUP_WINDOW_OPTS,
+      (window): void => {
+        if (window) {
+          this.#windows.push(window.id || 0);
+        }
+      });
   }
 
   private authComplete = (id: string, resolve: (result: boolean) => void, reject: (error: Error) => void): Resolver<boolean> => {
@@ -198,8 +238,34 @@ export default class State {
     };
   }
 
-  private saveCurrentAuthList () {
-    localStorage.setItem(AUTH_URLS_KEY, JSON.stringify(this.#authUrls));
+  public updateCurrentTabsUrl (urls: string[]) {
+    const connectedTabs = urls.map((url) => {
+      let strippedUrl = '';
+
+      // the assert in stripUrl may throw for new tabs with "chrome://newtab/"
+      try {
+        strippedUrl = this.stripUrl(url);
+      } catch (e) {
+        console.error(e);
+      }
+
+      // return the stripped url only if this website is known
+      return !!strippedUrl && this.authUrls[strippedUrl]
+        ? strippedUrl
+        : undefined;
+    })
+      .filter((value) => !!value) as string[];
+
+    this.#connectedTabsUrl = connectedTabs;
+  }
+
+  public getConnectedTabsUrl () {
+    return this.#connectedTabsUrl;
+  }
+
+
+  private async saveCurrentAuthList () {
+    await chrome.storage.local.set({ [AUTH_URLS_KEY]: JSON.stringify(this.#authUrls) });
   }
 
   private metaComplete = (id: string, resolve: (result: boolean) => void, reject: (error: Error) => void): Resolver<boolean> => {
@@ -258,7 +324,7 @@ export default class State {
           : (signCount ? `${signCount}` : '')
     );
 
-    chrome.browserAction.setBadgeText({ text });
+    chrome.action.setBadgeText({ text });
 
     if (shouldClose && text === '') {
       this.popupClose();
@@ -427,6 +493,12 @@ export default class State {
     this.#metaStore.set(meta.genesisHash, meta);
 
     addMetadata(meta);
+  }
+
+  public setNotification (notification: string): boolean {
+    this.#notification = notification;
+
+    return true;
   }
 
   public sign (url: string, request: RequestSign, account: AccountJson): Promise<ResponseSigning> {

@@ -70,12 +70,15 @@ export interface SigningRequest {
   request: RequestSign;
   url: string;
 }
+export type ConnectedTabsUrlResponse = string[]
 
 // [MessageType]: [RequestType, ResponseType, SubscriptionMessageType?]
 export interface RequestSignatures {
   // private/internal requests, i.e. from a popup
   'pri(accounts.create.external)': [RequestAccountCreateExternal, boolean];
   'pri(accounts.create.hardware)': [RequestAccountCreateHardware, boolean];
+  'pri(activeTabsUrl.update)': [RequestActiveTabsUrlUpdate, void];
+  'pri(connectedTabsUrl.get)': [null, ConnectedTabsUrlResponse];
   'pri(accounts.create.suri)': [RequestAccountCreateSuri, boolean];
   'pri(accounts.edit)': [RequestAccountEdit, boolean];
   'pri(accounts.export)': [RequestAccountExport, ResponseAccountExport];
@@ -125,6 +128,7 @@ export interface RequestSignatures {
   'pub(rpc.subscribe)': [RequestRpcSubscribe, number, JsonRpcResponse];
   'pub(rpc.subscribeConnected)': [null, boolean, boolean];
   'pub(rpc.unsubscribe)': [RequestRpcUnsubscribe, boolean];
+  'pub(ping)': [null, boolean];
 }
 
 export type MessageTypes = keyof RequestSignatures;
@@ -140,7 +144,7 @@ export type MessageTypesWithNullRequest = NullKeys<RequestTypes>
 export interface TransportRequestMessage<TMessageType extends MessageTypes> {
   id: string;
   message: TMessageType;
-  origin: 'page' | 'extension';
+  origin: string;
   request: RequestTypes[TMessageType];
 }
 
@@ -398,4 +402,8 @@ export interface ResponseJsonGetAccountInfo {
 
 export interface ResponseAuthorizeList {
   list: AuthUrls;
+}
+
+export interface RequestActiveTabsUrlUpdate {
+  urls: string[];
 }

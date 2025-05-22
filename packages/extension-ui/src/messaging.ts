@@ -1,7 +1,7 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { AccountJson, AllowedPath, AuthorizeRequest, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@cennznet/extension-base/background/types';
+import type { AccountJson, AllowedPath, AuthorizeRequest, ConnectedTabsUrlResponse, MessageTypes, MessageTypesWithNoSubscriptions, MessageTypesWithNullRequest, MessageTypesWithSubscriptions, MetadataRequest, RequestTypes, ResponseAuthorizeList, ResponseDeriveValidate, ResponseJsonGetAccountInfo, ResponseSigningIsLocked, ResponseTypes, SeedLengths, SigningRequest, SubscriptionMessageTypes } from '@cennznet/extension-base/background/types';
 import type { Message } from '@cennznet/extension-base/types';
 import type { Chain } from '@cennznet/extension-chains/types';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
@@ -191,6 +191,10 @@ export async function getMetadata (genesisHash?: string | null, specVersion?: BN
   }
 
   return null;
+}
+
+export async function getConnectedTabsUrl (): Promise<ConnectedTabsUrlResponse> {
+  return sendMessage('pri(connectedTabsUrl.get)', null);
 }
 
 export async function rejectAuthRequest (id: string): Promise<boolean> {

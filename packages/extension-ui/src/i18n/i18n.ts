@@ -19,11 +19,11 @@ i18next
       escapeValue: false
     },
     keySeparator: false,
-    lng: uiSettings.i18nLang,
+    lng: 'en',
     load: 'languageOnly',
     nsSeparator: false,
     react: {
-      wait: true
+      useSuspense : true
     },
     returnEmptyString: false,
     returnNull: false

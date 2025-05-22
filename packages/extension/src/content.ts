@@ -3,31 +3,45 @@
 
 import type { Message } from '@cennznet/extension-base/types';
 
-import { PORT_CONTENT } from '@cennznet/extension-base/defaults';
+import { ensurePortConnection } from '@cennznet/extension-base/utils/portUtils';
+
+import { MESSAGE_ORIGIN_CONTENT, MESSAGE_ORIGIN_PAGE, PORT_CONTENT } from '@cennznet/extension-base/defaults';
 import chrome from '@cennznet/extension-inject/chrome';
 
 // connect to the extension
-const port = chrome.runtime.connect({ name: PORT_CONTENT });
+let port: chrome.runtime.Port | undefined;
 
-// send any messages from the extension back to the page
-port.onMessage.addListener((data): void => {
-  window.postMessage({ ...data, origin: 'content' }, '*');
-});
+function onPortMessageHandler (data: Message['data']): void {
+  window.postMessage({ ...data, origin: MESSAGE_ORIGIN_CONTENT }, '*');
+}
+
+function onPortDisconnectHandler (): void {
+  port = undefined;
+}
+
+const portConfig = {
+  onPortDisconnectHandler,
+  onPortMessageHandler,
+  portName: PORT_CONTENT
+};
 
 // all messages from the page, pass them to the extension
 window.addEventListener('message', ({ data, source }: Message): void => {
   // only allow messages from our window, by the inject
-  if (source !== window || data.origin !== 'page') {
+  if (source !== window || data.origin !== MESSAGE_ORIGIN_PAGE) {
     return;
   }
 
-  port.postMessage(data);
+  ensurePortConnection(port, portConfig).then((connectedPort) => {
+    connectedPort.postMessage(data);
+    port = connectedPort;
+  }).catch((error) => console.error(`Failed to send message: ${(error as Error).message}`));
 });
 
 // inject our data injector
 const script = document.createElement('script');
 
-script.src = chrome.extension.getURL('page.js');
+script.src = chrome.runtime.getURL('page.js');
 
 script.onload = (): void => {
   // remove the injecting tag when loaded

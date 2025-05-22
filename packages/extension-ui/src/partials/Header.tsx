@@ -3,32 +3,54 @@
 
 import type { ThemeProps } from '../types';
 
-import { faArrowLeft, faCog, faPlusCircle } from '@fortawesome/free-solid-svg-icons';
+import { faArrowLeft, faCog, faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import logo from '../assets/cennz.svg';
 import Link from '../components/Link';
+import InputFilter from '../components/InputFilter';
 import useOutsideClick from '../hooks/useOutsideClick';
 import MenuAdd from './MenuAdd';
 import MenuSettings from './MenuSettings';
+import useTranslation from '../hooks/useTranslation';
+import { getConnectedTabsUrl } from "@cennznet/extension-ui/messaging";
 
 interface Props extends ThemeProps {
   children?: React.ReactNode;
   className?: string;
+  onFilter?: (filter: string) => void;
   showAdd?: boolean;
   showBackArrow?: boolean;
   showSettings?: boolean;
   smallMargin?: boolean;
+  showConnectedAccounts?: boolean;
+  showSearch?: boolean;
   text?: React.ReactNode;
 }
 
-function Header ({ children, className = '', showAdd, showBackArrow, showSettings, smallMargin = false, text }: Props): React.ReactElement<Props> {
+function Header ({ children, className = '', onFilter, showAdd, showBackArrow, showConnectedAccounts, showSearch, showSettings, smallMargin = false, text }: Props): React.ReactElement<Props> {
   const [isAddOpen, setShowAdd] = useState(false);
   const [isSettingsOpen, setShowSettings] = useState(false);
+  const [isSearchOpen, setShowSearch] = useState(false);
+  const [filter, setFilter] = useState('');
   const addRef = useRef(null);
   const setRef = useRef(null);
+  const [connectedTabsUrl, setConnectedTabsUrl] = useState<string[]>([]);
+  const isConnected = useMemo(() => connectedTabsUrl.length >= 1
+    , [connectedTabsUrl]);
+  const { t } = useTranslation();
+
+  useEffect(() => {
+    if (!showConnectedAccounts) {
+      return;
+    }
+
+    getConnectedTabsUrl()
+      .then((tabsUrl) => setConnectedTabsUrl(tabsUrl))
+      .catch(console.error);
+  }, [showConnectedAccounts]);
 
   useOutsideClick(addRef, (): void => {
     isAddOpen && setShowAdd(!isAddOpen);
@@ -46,6 +68,25 @@ function Header ({ children, className = '', showAdd, showBackArrow, showSetting
   const _toggleSettings = useCallback(
     (): void => setShowSettings((isSettingsOpen) => !isSettingsOpen),
     []
+  );
+
+  const _onChangeFilter = useCallback(
+    (filter: string) => {
+      setFilter(filter);
+      onFilter && onFilter(filter);
+    },
+    [onFilter]
+  );
+
+  const _toggleSearch = useCallback(
+    (): void => {
+      if (isSearchOpen) {
+        _onChangeFilter('');
+      }
+
+      setShowSearch((isSearchOpen) => !isSearchOpen);
+    },
+    [_onChangeFilter, isSearchOpen]
   );
 
   return (
@@ -73,6 +114,35 @@ function Header ({ children, className = '', showAdd, showBackArrow, showSetting
           }
           <span className='logoText'>{text || 'CENNZnet'}</span>
         </div>
+        {showSearch && (
+          <div className={`searchBarWrapper ${isSearchOpen ? 'selected' : ''}`}>
+            {showConnectedAccounts && !!isConnected && !isSearchOpen && (
+              <div className='connectedAccountsWrapper'>
+                <Link
+                  className='connectedAccounts'
+                  to={connectedTabsUrl.length === 1 ? `/url/manage/${connectedTabsUrl[0]}` : '/auth-list'}
+                >
+                  <span className='greenDot'>•</span>Connect Accounts
+                </Link>
+              </div>
+            )}
+            {isSearchOpen && (
+              <InputFilter
+                className='inputFilter'
+                onChange={_onChangeFilter}
+                placeholder={t('Search by name or network...')}
+                value={filter}
+                withReset
+              />
+            )}
+            <FontAwesomeIcon
+              className={`searchIcon ${isSearchOpen ? 'selected' : ''}`}
+              icon={faSearch}
+              onClick={_toggleSearch}
+              size='lg'
+            />
+          </div>
+        )}
         <div className='popupMenus'>
           {showAdd && (
             <div

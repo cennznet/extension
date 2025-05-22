@@ -1,7 +1,7 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import '../../../../../__mocks__/chrome';
+import '../../../../mocks/chrome';
 
 import type { AccountJson, ResponseDeriveValidate } from '@cennznet/extension-base/background/types';
 

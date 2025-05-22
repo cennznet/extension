@@ -2,9 +2,13 @@
 // SPDX-License-Identifier: Apache-2.0
 
 const ALLOWED_PATH = ['/', '/account/import-ledger', '/account/restore-json'] as const;
-const PORT_CONTENT = 'content';
+const PORT_CONTENT = 'cennznet-content';
 const PHISHING_PAGE_REDIRECT = '/phishing-page-detected';
-const PORT_EXTENSION = 'extension';
+const PORT_EXTENSION = 'cennznet-extension';
+
+export const MESSAGE_ORIGIN_PAGE = `cennznet-page`;
+export const MESSAGE_ORIGIN_CONTENT = `cennznet-content`;
+
 const PASSWORD_EXPIRY_MIN = 15;
 const PASSWORD_EXPIRY_MS = PASSWORD_EXPIRY_MIN * 60 * 1000;
 
