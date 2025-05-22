@@ -20,7 +20,7 @@
     "typescript": "^4.2.4"
   },
   "scripts": {
-    "build": "./cennznet-dev-build-ts.cjs && yarn build:zip",
+    "build": "NODE_OPTIONS=--openssl-legacy-provider ./cennznet-dev-build-ts.cjs && yarn build:zip",
     "build:extra": "yarn build:i18n && yarn build:ui",
     "build:i18n": "i18next-scanner --config i18next-scanner.config.js",
     "build:release": "polkadot-ci-ghact-build",
