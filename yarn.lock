@@ -2238,7 +2238,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@polkadot/hw-ledger@npm:^6.1.1":
+"@polkadot/hw-ledger@npm:6.11.1":
   version: 6.11.1
   resolution: "@polkadot/hw-ledger@npm:6.11.1"
   dependencies:

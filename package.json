@@ -9,6 +9,7 @@
   ],
   "resolutions": {
     "@polkadot/api": "^4.4.2-1",
+    "@polkadot/hw-ledger": "6.11.1",
     "@polkadot/keyring": "^6.0.5",
     "@polkadot/networks": "^6.0.5",
     "@polkadot/types": "^4.4.2-1",
