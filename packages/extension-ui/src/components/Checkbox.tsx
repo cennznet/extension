@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -43,8 +41,8 @@ function Checkbox ({ checked, className, label, onChange, onClick }: Props): Rea
   );
 }
 
-export default styled(Checkbox)(({ theme }: ThemeProps) => `
-  margin: ${theme.boxMargin};
+export default styled(Checkbox)<Props>`
+  margin: var(--boxMargin);
 
   label {
     display: block;
@@ -53,9 +51,9 @@ export default styled(Checkbox)(({ theme }: ThemeProps) => `
     user-select: none;
     padding-left: 24px;
     padding-top: 1px;
-    color: ${theme.subTextColor};
-    font-size: ${theme.fontSize};
-    line-height: ${theme.lineHeight};
+    color: var(--subTextColor);
+    font-size: var(--fontSize);
+    line-height: var(--lineHeight);
 
     & input {
       position: absolute;
@@ -71,10 +69,11 @@ export default styled(Checkbox)(({ theme }: ThemeProps) => `
       left: 0;
       height: 16px;
       width: 16px;
-      border-radius: ${theme.borderRadius};
-      background-color: ${theme.readonlyInputBackground};
-      border: 1px solid ${theme.inputBorderColor};
-      border: 1px solid ${theme.inputBorderColor};
+      border-radius: var(--borderRadius);
+      background-color: var(--readonlyInputBackground);
+      border: 1px solid var(--inputBorderColor);
+      border: 1px solid var(--inputBorderColor);
+
       &:after {
         content: '';
         display: none;
@@ -85,16 +84,20 @@ export default styled(Checkbox)(({ theme }: ThemeProps) => `
         top: 2px;
         mask: url(${Checkmark});
         mask-size: cover;
-        background: ${theme.primaryColor};
+        background: var(--primaryColor);
       }
     }
 
     &:hover input ~ span {
-      background-color: ${theme.inputBackground};
+      background-color: var(--inputBackground);
     }
 
     input:checked ~ span:after {
       display: block;
     }
+
+    input:indeterminate ~ span {
+      background: var(--primaryColor)
+    }
   }
-`);
+`;

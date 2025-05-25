@@ -12,6 +12,7 @@ import { BehaviorSubject } from 'rxjs';
 import { assert } from '@polkadot/util';
 
 import { MetadataStore } from '../../stores';
+import { withErrorLog } from "@cennznet/extension-base/background/handlers/Extension";
 
 interface Resolver <T> {
   reject: (error: Error) => void;
@@ -61,7 +62,7 @@ let idCounter = 0;
 
 const NOTIFICATION_URL = chrome.runtime.getURL('notification.html');
 
-const POPUP_WINDOW_OPTS = {
+const POPUP_WINDOW_OPTS: chrome.windows.CreateData = {
   // This is not allowed on FF, only on Chrome - disable completely
   // focused: true,
   height: 621,
@@ -129,25 +130,24 @@ export default class State {
 
   public async init () {
 
-    // retrieve previously set authorizations
-    chrome.storage.local.get([AUTH_URLS_KEY], storageAuthUrls => {
+    const storageAuthUrls: Record<string, string> = await chrome.storage.local.get(AUTH_URLS_KEY);
+    const authString = storageAuthUrls?.[AUTH_URLS_KEY] || '{}';
+    const previousAuth = JSON.parse(authString) as AuthUrls;
 
-      const authString = storageAuthUrls?.[AUTH_URLS_KEY] || '{}';
-      const previousAuth = JSON.parse(authString) as AuthUrls;
+    this.#authUrls = previousAuth;
 
-      this.#authUrls = previousAuth;
-      // Initialize authUrlSubjects for each URL
-      Object.entries(previousAuth).forEach(([url, authInfo]) => {
-        this.authUrlSubjects[url] = new BehaviorSubject<AuthUrlInfo>(authInfo);
-      });
+    // Initialize authUrlSubjects for each URL
+    Object.entries(previousAuth).forEach(([url, authInfo]) => {
+      this.authUrlSubjects[url] = new BehaviorSubject<AuthUrlInfo>(authInfo);
     });
 
     // retrieve previously set default auth accounts
-    chrome.storage.local.get([DEFAULT_AUTH_ACCOUNTS], storageDefaultAuthAccounts => {
-      const defaultAuthString: string = storageDefaultAuthAccounts?.[DEFAULT_AUTH_ACCOUNTS] || '[]';
-      const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
-      this.defaultAuthAccountSelection = previousDefaultAuth;
-    });
+    const storageDefaultAuthAccounts: Record<string, string> = await chrome.storage.local.get(DEFAULT_AUTH_ACCOUNTS);
+    const defaultAuthString: string = storageDefaultAuthAccounts?.[DEFAULT_AUTH_ACCOUNTS] || '[]';
+    const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
+
+    this.defaultAuthAccountSelection = previousDefaultAuth;
+
   }
 
   public get knownMetadata (): MetadataDef[] {
@@ -189,8 +189,8 @@ export default class State {
   }
 
   private popupClose (): void {
-    this.#windows.forEach((id: number): void =>
-      chrome.windows.remove(id)
+    this.#windows.forEach((id: number) =>
+      withErrorLog(() => chrome.windows.remove(id))
     );
     this.#windows = [];
   }

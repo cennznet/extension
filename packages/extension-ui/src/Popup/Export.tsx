@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React, { useCallback, useContext, useState } from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import styled from 'styled-components';
@@ -14,7 +12,7 @@ import { Header } from '../partials';
 
 const MIN_LENGTH = 6;
 
-interface Props extends RouteComponentProps<{address: string}>, ThemeProps {
+interface Props extends RouteComponentProps<{address: string}> {
   className?: string;
 }
 

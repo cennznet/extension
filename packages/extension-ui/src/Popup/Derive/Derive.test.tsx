@@ -10,9 +10,8 @@ import { configure, mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter, Route } from 'react-router';
-import { ThemeProvider } from 'styled-components';
 
-import { AccountContext, ActionContext, themes } from '../../components';
+import { AccountContext, ActionContext } from '../../components';
 import * as messaging from '../../messaging';
 import { flushAllPromises } from '../../testHelpers';
 import { buildHierarchy } from '../../util/buildHierarchy';
@@ -51,11 +50,9 @@ describe('Derive', () => {
             accounts: accounts,
             hierarchy: buildHierarchy(accounts)
           }}>
-            <ThemeProvider theme={themes.dark}>
-              <Route path='/account/derive/:address'>
-                <Derive isLocked={locked}/>
-              </Route>
-            </ThemeProvider>
+            <Route path='/account/derive/:address'>
+              <Derive isLocked={locked}/>
+            </Route>
           </AccountContext.Provider>
         </ActionContext.Provider>
       </MemoryRouter>

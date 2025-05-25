@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React from 'react';
 import styled from 'styled-components';
 
@@ -14,7 +12,7 @@ interface DropdownOption {
   value: string;
 }
 
-interface Props extends ThemeProps {
+interface Props {
   className?: string;
   defaultValue?: string | null;
   isDisabled?: boolean
@@ -60,23 +58,23 @@ function Dropdown ({ className, defaultValue, isDisabled, isFocussed, label, onB
   );
 }
 
-export default React.memo(styled(Dropdown)(({ isError, label, theme }: Props) => `
+export default React.memo(styled(Dropdown)<Props>(({ isError, label }) => `
   position: relative;
 
   select {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;
-    background: ${theme.readonlyInputBackground};
-    border-color: ${isError ? theme.errorBorderColor : theme.inputBorderColor};
-    border-radius: ${theme.borderRadius};
+    background: var(--readonlyInputBackground);
+    border-color: var(${isError ? '--errorBorderColor' : '--inputBorderColor'});
+    border-radius: var(--borderRadius);
     border-style: solid;
     border-width: 1px;
     box-sizing: border-box;
-    color: ${isError ? theme.errorBorderColor : theme.textColor};
+    color: var(${isError ? '--errorBorderColor' : '--textColor'});
     display: block;
-    font-family: ${theme.fontFamily};
-    font-size: ${theme.fontSize};
+    font-family: var(--fontFamily);
+    font-size: var(--fontSize);
     padding: 0.5rem 0.75rem;
     width: 100%;
     cursor: pointer;

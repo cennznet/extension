@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -37,7 +35,7 @@ function Switch ({ checked, checkedLabel, className, onChange, uncheckedLabel }:
   );
 }
 
-export default styled(Switch)(({ theme }: ThemeProps) => `
+export default styled(Switch)<Props>`
   label {
     position: relative;
     display: inline-block;
@@ -63,10 +61,10 @@ export default styled(Switch)(({ theme }: ThemeProps) => `
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: ${theme.readonlyInputBackground};
+    background-color: var(--readonlyInputBackground);
     transition: 0.2s;
     border-radius: 100px;
-    border: 1px solid ${theme.inputBorderColor};
+    border: 1px solid var(--inputBorderColor);
 
     &:before {
       position: absolute;
@@ -75,9 +73,9 @@ export default styled(Switch)(({ theme }: ThemeProps) => `
       width: 16px;
       left: 4px;
       bottom: 3px;
-      background-color: ${theme.primaryColor};
+      background-color: var(--primaryColor);
       transition: 0.4s;
       border-radius: 50%;
     }
   }
-`);
+`;

@@ -1,7 +1,7 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
+import type { ButtonProps } from './Button';
 
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -25,11 +25,11 @@ function NextStepButton ({ children, ...props }: Props): React.ReactElement<Prop
   );
 }
 
-export default styled(NextStepButton)(({ theme }: ThemeProps) => `
+export default styled(NextStepButton)<ButtonProps>`
   .arrowRight{
     float: right;
     margin-top: 4px;
     margin-right: 1px;
-    color: ${theme.buttonTextColor};
+    color: var(--buttonTextColor);
   }
-`);
+`;

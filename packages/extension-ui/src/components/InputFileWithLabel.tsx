@@ -1,8 +1,6 @@
 // Copyright 2017-2021 @polkadot/react-components authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React, { createRef, useCallback, useState } from 'react';
 import Dropzone, { DropzoneRef } from 'react-dropzone';
 import styled from 'styled-components';
@@ -130,11 +128,11 @@ function InputFile ({ accept, className = '', clearContent, convertHex, isDisabl
     : dropZone;
 }
 
-export default React.memo(styled(InputFile)(({ isError, theme }: InputFileProps & ThemeProps) => `
-  border: 1px solid ${isError ? theme.errorBorderColor : theme.inputBorderColor};
-  background: ${theme.inputBackground};
-  border-radius: ${theme.borderRadius};
-  color: ${isError ? theme.errorBorderColor : theme.textColor};
+export default React.memo(styled(InputFile)<InputFileProps>(({ isError }) => `
+  border: 1px solid var(${isError ? '--errorBorderColor' : '--inputBorderColor'});
+  background: var(--inputBackground);
+  border-radius: var(--borderRadius);
+  color: var(${isError ? '--errorBorderColor' : '--textColor'});
   font-size: 1rem;
   margin: 0.25rem 0;
   overflow-wrap: anywhere;

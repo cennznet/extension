@@ -16,7 +16,7 @@ import { cryptoWaitReady } from '@polkadot/util-crypto';
 
 import { AccountsStore } from '../../stores';
 import Extension from './Extension';
-import State, { AuthUrls } from './State';
+import State from './State';
 import Tabs from './Tabs';
 
 describe('Extension', () => {
@@ -30,17 +30,8 @@ describe('Extension', () => {
     await cryptoWaitReady();
 
     keyring.loadAll({ store: new AccountsStore() });
-    const authUrls: AuthUrls = {};
-
-    authUrls['localhost:3000'] = {
-      count: 0,
-      id: '11',
-      isAllowed: true,
-      origin: 'example.com',
-      url: 'http://localhost:3000'
-    };
-    localStorage.setItem('authUrls', JSON.stringify(authUrls));
     state = new State();
+    await state.init();
     tabs = new Tabs(state);
 
     return new Extension(state);

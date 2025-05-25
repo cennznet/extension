@@ -7,9 +7,8 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
-import { ThemeProvider } from 'styled-components';
 
-import { ActionContext, ActionText, Button, themes } from '../../components';
+import { ActionContext, ActionText, Button } from '../../components';
 import * as messaging from '../../messaging';
 import { Header } from '../../partials';
 import { flushAllPromises } from '../../testHelpers';
@@ -28,9 +27,7 @@ describe('Create Account', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const mountComponent = (): ReactWrapper => mount(
     <ActionContext.Provider value={onActionStub}>
-      <ThemeProvider theme={themes.dark}>
-        <CreateAccount />
-      </ThemeProvider>
+      <CreateAccount />
     </ActionContext.Provider>
   );
 

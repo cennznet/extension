@@ -7,9 +7,7 @@ import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 import { MemoryRouter } from 'react-router';
-import { ThemeProvider } from 'styled-components';
 
-import { themes } from '../components';
 import Header from './Header';
 import Settings from './MenuSettings';
 
@@ -21,10 +19,8 @@ describe('Header component', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const mountHeader = (props: React.ComponentProps<typeof Header> = {}): ReactWrapper => mount(
     <MemoryRouter>
-      <ThemeProvider theme={themes.dark}>
         <Header {...props}>
         </Header>
-      </ThemeProvider>
     </MemoryRouter>);
 
   it('gear icon is not highlighted when settings are hidden', () => {

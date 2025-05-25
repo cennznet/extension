@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
-
 import { faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useState } from 'react';
@@ -11,7 +9,7 @@ import styled from 'styled-components';
 import { Button, InputWithLabel } from '../../components';
 import useTranslation from '../../hooks/useTranslation';
 
-interface Props extends ThemeProps{
+interface Props {
   className?: string;
   defaultPath: string;
   isError: boolean;
@@ -71,7 +69,7 @@ function DerivationPath ({ className, defaultPath, isError, onChange, withSoftPa
   );
 }
 
-export default React.memo(styled(DerivationPath)(({ theme }: Props) => `
+export default React.memo(styled(DerivationPath)<Props>`
   > .container {
     display: flex;
     flex-direction: row;
@@ -98,7 +96,7 @@ export default React.memo(styled(DerivationPath)(({ theme }: Props) => `
   }
 
   .lockIcon {
-    color: ${theme.iconNeutralColor}
+    color: var(--iconNeutralColor)
   }
 
   .pathInput {
@@ -108,4 +106,4 @@ export default React.memo(styled(DerivationPath)(({ theme }: Props) => `
       opacity: 50%;
     }
   }
-`));
+`);

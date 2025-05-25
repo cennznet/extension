@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import { faArrowLeft, faCog, faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -17,7 +15,7 @@ import MenuSettings from './MenuSettings';
 import useTranslation from '../hooks/useTranslation';
 import { getConnectedTabsUrl } from "@cennznet/extension-ui/messaging";
 
-interface Props extends ThemeProps {
+interface Props {
   children?: React.ReactNode;
   className?: string;
   onFilter?: (filter: string) => void;
@@ -182,7 +180,7 @@ function Header ({ children, className = '', onFilter, showAdd, showBackArrow, s
   );
 }
 
-export default React.memo(styled(Header)(({ theme }: Props) => `
+export default React.memo(styled(Header)<Props>`
   max-width: 100%;
   box-sizing: border-box;
   font-weight: normal;
@@ -198,15 +196,15 @@ export default React.memo(styled(Header)(({ theme }: Props) => `
     display: flex;
     justify-content: space-between;
     width: 100%;
-    border-bottom: 1px solid ${theme.inputBorderColor};
+    border-bottom: 1px solid var(--inputBorderColor);
     min-height: 70px;
 
     .branding {
       display: flex;
       justify-content: center;
       align-items: center;
-      color: ${theme.labelColor};
-      font-family: ${theme.fontFamily};
+      color: var(--labelColor);
+      font-family: var(--fontFamily);
       text-align: center;
       margin-left: 24px;
 
@@ -217,60 +215,89 @@ export default React.memo(styled(Header)(({ theme }: Props) => `
       }
 
       .logoText {
-        color: ${theme.textColor};
-        font-family: ${theme.fontFamily};
+        color: var(--textColor);
+        font-family: var(--fontFamily);
         font-size: 20px;
         line-height: 27px;
       }
     }
 
-    .popupMenus {
+    .popupMenus, .searchBarWrapper {
       align-self: center;
+    }
 
-      .popupToggle {
-        display: inline-block;
-        vertical-align: middle;
+    .connectedAccountsWrapper {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
-        &:last-child {
-          margin-right: 24px;
-        }
+    .connectedAccounts {
+      border: 1px solid var(--inputBorderColor);
+      border-radius: 4px;
+      padding: 0 0.5rem;
+
+      .greenDot {
+        margin-right: 0.3rem;
+        font-size: 1.5rem;
+        color: var(--connectedDotColor);
+        padding-bottom: 0.2rem;
+      }
+    }
+
+    .searchBarWrapper {
+      flex: 1;
+      display: flex;
+      justify-content: end;
+      align-items: center;
+
+      .searchIcon {
+        margin-right: 8px;
 
         &:hover {
           cursor: pointer;
         }
       }
+    }
 
-      .popupToggle+.popupToggle {
-        margin-left: 8px;
+    .popupToggle {
+      display: inline-block;
+      vertical-align: middle;
+
+      &:last-child {
+        margin-right: 24px;
       }
+
+      &:hover {
+        cursor: pointer;
+      }
+    }
+
+    .inputFilter {
+      width: 100%
+    }
+
+    .popupToggle+.popupToggle {
+      margin-left: 8px;
     }
   }
 
-  .plusIcon, .cogIcon {
-    color: ${theme.iconNeutralColor};
+  .plusIcon, .cogIcon, .searchIcon {
+    color: var(--iconNeutralColor);
 
     &.selected {
-      color: ${theme.primaryColor};
+      color: var(--primaryColor);
     }
   }
 
   .arrowLeftIcon {
-    color: ${theme.labelColor};
+    color: var(--labelColor);
     margin-right: 1rem;
-  }
-
-  .backlink {
-    color: ${theme.labelColor};
-    min-height: 52px;
-    text-decoration: underline;
-    width: min-content;
-
-    &:visited {
-      color: ${theme.labelColor};
-    }
+    cursor: pointer;
   }
 
   &.smallMargin {
     margin-bottom: 15px;
   }
-`));
+`);

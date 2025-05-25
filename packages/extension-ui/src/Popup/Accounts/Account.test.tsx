@@ -8,9 +8,7 @@ import { configure, mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter } from 'react-router';
-import { ThemeProvider } from 'styled-components';
 
-import { Theme, themes } from '../../components';
 import * as messaging from '../../messaging';
 import { flushAllPromises } from '../../testHelpers';
 import Account from './Account';
@@ -24,14 +22,12 @@ describe('Account component', () => {
   let wrapper: ReactWrapper;
   const VALID_ADDRESS = 'HjoBp62cvsWDA3vtNMWxz6c9q13ReEHi9UGHK7JbZweH5g5';
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  const mountAccountComponent = (additionalAccountProperties: Record<string, unknown>, theme: Theme = themes.dark): ReactWrapper => mount(
+  const mountAccountComponent = (additionalAccountProperties: Record<string, unknown>): ReactWrapper => mount(
     <MemoryRouter>
-      <ThemeProvider theme={theme}>
         <Account
           {...{ address: VALID_ADDRESS, ...additionalAccountProperties }}
         >
         </Account>
-      </ThemeProvider>
     </MemoryRouter>);
 
   it('shows Export option if account is not external', async () => {

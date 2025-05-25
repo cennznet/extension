@@ -1,12 +1,10 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React from 'react';
 import styled from 'styled-components';
 
-interface Props extends ThemeProps {
+interface Props {
   children: React.ReactNode;
   className?: string;
   noBorder?: boolean;
@@ -24,19 +22,23 @@ function MenuItem ({ children, className = '', title }: Props): React.ReactEleme
   );
 }
 
-export default styled(MenuItem)(({ theme }: ThemeProps) => `
+export default styled(MenuItem)<Props>`
   min-width: 13rem;
   padding: 0 16px;
   max-width: 100%;
 
   > .itemTitle {
-      margin: 0;
-      width: 100%;
-      font-size: ${theme.inputLabelFontSize};
-      line-height: 14px;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-      color: ${theme.textColor};
-      opacity: 0.65;
-    }
-`);
+    margin: 0;
+    width: 100%;
+    font-size: var(--inputLabelFontSize);
+    line-height: 14px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--textColor);
+    opacity: 0.65;
+  }
+
+  &+&.isTitled {
+    margin-top: 16px;
+  }
+`;

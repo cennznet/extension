@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import { faCopy } from '@fortawesome/free-regular-svg-icons';
 import React, { MouseEventHandler } from 'react';
 import styled from 'styled-components';
@@ -41,7 +39,7 @@ function MnemonicSeed ({ className, onCopy, seed }: Props): React.ReactElement<P
   );
 }
 
-export default styled(MnemonicSeed)(({ theme }: ThemeProps) => `
+export default styled(MnemonicSeed)<Props>`
   margin-bottom: 21px;
 
   .buttonsRow {
@@ -54,14 +52,14 @@ export default styled(MnemonicSeed)(({ theme }: ThemeProps) => `
   }
 
   .mnemonicDisplay {
-    textarea {
-      color: ${theme.primaryColor};
-      font-size: ${theme.fontSize};
+    .seedBox {
+      color: var(--primaryColor);
+      font-size: var(--fontSize);
       height: unset;
       letter-spacing: -0.01em;
-      line-height: ${theme.lineHeight};
+      line-height: var(--lineHeight);
       margin-bottom: 10px;
       padding: 14px;
     }
   }
-`);
+`;
