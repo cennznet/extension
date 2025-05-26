@@ -5,6 +5,7 @@ import type { MetadataDef, ProviderMeta } from '@cennznet/extension-inject/types
 import type { JsonRpcResponse, ProviderInterface, ProviderInterfaceCallback } from '@polkadot/rpc-provider/types';
 import type { AccountJson, AuthorizeRequest, MetadataRequest, RequestAuthorizeTab, RequestRpcSend, RequestRpcSubscribe, RequestRpcUnsubscribe, RequestSign, ResponseRpcListProviders, ResponseSigning, SigningRequest } from '../types';
 
+import { withErrorLog } from '@cennznet/extension-base/background/handlers/Extension';
 import { addMetadata, knownMetadata } from '@cennznet/extension-chains';
 import chrome from '@cennznet/extension-inject/chrome';
 import { BehaviorSubject } from 'rxjs';
@@ -12,7 +13,6 @@ import { BehaviorSubject } from 'rxjs';
 import { assert } from '@polkadot/util';
 
 import { MetadataStore } from '../../stores';
-import { withErrorLog } from "@cennznet/extension-base/background/handlers/Extension";
 
 interface Resolver <T> {
   reject: (error: Error) => void;
@@ -85,6 +85,7 @@ const DEFAULT_AUTH_ACCOUNTS = 'defaultAuthAccounts';
 function getId (): string {
   return `${Date.now()}.${++idCounter}`;
 }
+
 export const NOTIFICATION_DEFAULT = 'popup';
 
 export default class State {
@@ -129,7 +130,6 @@ export default class State {
   }
 
   public async init () {
-
     const storageAuthUrls: Record<string, string> = await chrome.storage.local.get(AUTH_URLS_KEY);
     const authString = storageAuthUrls?.[AUTH_URLS_KEY] || '{}';
     const previousAuth = JSON.parse(authString) as AuthUrls;
@@ -147,7 +147,6 @@ export default class State {
     const previousDefaultAuth = JSON.parse(defaultAuthString) as string[];
 
     this.defaultAuthAccountSelection = previousDefaultAuth;
-
   }
 
   public get knownMetadata (): MetadataDef[] {
@@ -221,6 +220,7 @@ export default class State {
         url
       };
 
+      // eslint-disable-next-line @typescript-eslint/no-floating-promises
       this.saveCurrentAuthList();
       delete this.#authRequests[id];
       this.updateIconAuth(true);
@@ -262,7 +262,6 @@ export default class State {
   public getConnectedTabsUrl () {
     return this.#connectedTabsUrl;
   }
-
 
   private async saveCurrentAuthList () {
     await chrome.storage.local.set({ [AUTH_URLS_KEY]: JSON.stringify(this.#authUrls) });
@@ -324,6 +323,7 @@ export default class State {
           : (signCount ? `${signCount}` : '')
     );
 
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     chrome.action.setBadgeText({ text });
 
     if (shouldClose && text === '') {

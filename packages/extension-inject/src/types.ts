@@ -93,12 +93,6 @@ export interface InjectedProviderWithMeta {
   meta: ProviderMeta;
 }
 
-export interface InjectedProviderWithMeta {
-  // provider will actually always be a PostMessageProvider, which implements InjectedProvider
-  provider: InjectedProvider;
-  meta: ProviderMeta;
-}
-
 export interface Injected {
   accounts: InjectedAccounts;
   metadata?: InjectedMetadata;

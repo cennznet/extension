@@ -6,11 +6,12 @@ import sinonChrome from 'sinon-chrome';
 // eslint-disable-next-line @typescript-eslint/no-namespace
 namespace ChromeWrapper {
   export interface IAction {
+    /* eslint-disable @typescript-eslint/ban-types */
     setBadgeText: (content: object) => Promise<void>;
   }
   export const action: IAction = {
     setBadgeText: (_: object) => {
-      return new Promise<void>((resolve, _reject) => {
+      return new Promise<void>((resolve, reject) => {
         resolve();
       });
     }

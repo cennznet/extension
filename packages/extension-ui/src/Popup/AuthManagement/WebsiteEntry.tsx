@@ -1,5 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
+
 import { AuthUrlInfo } from '@cennznet/extension-base/background/handlers/State';
 import { Switch } from '@cennznet/extension-ui/components';
 import React, { useCallback } from 'react';

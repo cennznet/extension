@@ -21,7 +21,7 @@ describe('Authorize', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const mountAuthorize = (authorizeRequests: AuthorizeRequest[] = []): ReactWrapper => mount(
     <AuthorizeReqContext.Provider value={authorizeRequests}>
-        <Authorize />
+      <Authorize />
     </AuthorizeReqContext.Provider>);
 
   it('render component', () => {

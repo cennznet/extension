@@ -3,11 +3,12 @@
 
 import type { Message } from '@cennznet/extension-base/types';
 
+import { RequestSignatures, TransportRequestMessage } from '@cennznet/extension-base/background/types';
+import { MESSAGE_ORIGIN_CONTENT } from '@cennznet/extension-base/defaults';
 import { enable, handleResponse, redirectIfPhishing } from '@cennznet/extension-base/page';
 import { injectExtension } from '@cennznet/extension-inject';
+
 import { packageInfo } from './packageInfo';
-import { MESSAGE_ORIGIN_CONTENT } from "@cennznet/extension-base/defaults";
-import { RequestSignatures, TransportRequestMessage } from '@cennznet/extension-base/background/types';
 
 // setup a response listener (events created by the loader for extension responses)
 window.addEventListener('message', ({ data, source }: Message): void => {

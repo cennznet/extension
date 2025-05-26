@@ -150,6 +150,7 @@ export default class Tabs {
       tabs
         .map(({ id }) => id)
         .filter((id): id is number => isNumber(id))
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         .forEach((id) => chrome.tabs.update(id, { url }));
     });
   }

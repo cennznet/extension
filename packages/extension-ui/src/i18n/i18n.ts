@@ -23,7 +23,7 @@ i18next
     load: 'languageOnly',
     nsSeparator: false,
     react: {
-      useSuspense : true
+      useSuspense: true
     },
     returnEmptyString: false,
     returnNull: false

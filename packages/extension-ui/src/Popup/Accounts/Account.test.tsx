@@ -24,10 +24,10 @@ describe('Account component', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const mountAccountComponent = (additionalAccountProperties: Record<string, unknown>): ReactWrapper => mount(
     <MemoryRouter>
-        <Account
-          {...{ address: VALID_ADDRESS, ...additionalAccountProperties }}
-        >
-        </Account>
+      <Account
+        {...{ address: VALID_ADDRESS, ...additionalAccountProperties }}
+      >
+      </Account>
     </MemoryRouter>);
 
   it('shows Export option if account is not external', async () => {

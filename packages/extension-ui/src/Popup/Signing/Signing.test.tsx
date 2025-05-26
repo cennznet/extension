@@ -48,7 +48,7 @@ describe('Signing requests', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     wrapper = mount(
       <ActionContext.Provider value={onActionStub}>
-          <MockRequestsProvider />
+        <MockRequestsProvider />
       </ActionContext.Provider>
     );
     await act(flushAllPromises);

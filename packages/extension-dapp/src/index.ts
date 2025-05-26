@@ -14,7 +14,7 @@ export function isOnObject <T> (...fns: (keyof T)[]): (value?: unknown) => value
     fns.every((f) => isFunction((value as T)[f]));
 }
 
-export const isPromise = /*#__PURE__*/ isOnObject<Promise<unknown>>('catch', 'then');
+export const isPromise = /* #__PURE__ */ isOnObject<Promise<unknown>>('catch', 'then');
 // just a helper (otherwise we cast all-over, so shorter and more readable)
 const win = window as Window & InjectedWindow;
 
@@ -292,6 +292,7 @@ export async function web3UseRpcProvider (source: string, key: string): Promise<
  * @summary Concats all sources into the destination
  * @description Spreads object properties while maintaining object integrity
  */
+/* eslint-disable @typescript-eslint/ban-types */
 export function objectSpread <T extends object> (dest: object, ...sources: (object | undefined | null)[]): T {
   const filterProps = new Set(['__proto__', 'constructor', 'prototype']);
 

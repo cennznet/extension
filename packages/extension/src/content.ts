@@ -3,9 +3,8 @@
 
 import type { Message } from '@cennznet/extension-base/types';
 
-import { ensurePortConnection } from '@cennznet/extension-base/utils/portUtils';
-
 import { MESSAGE_ORIGIN_CONTENT, MESSAGE_ORIGIN_PAGE, PORT_CONTENT } from '@cennznet/extension-base/defaults';
+import { ensurePortConnection } from '@cennznet/extension-base/utils/portUtils';
 import chrome from '@cennznet/extension-inject/chrome';
 
 // connect to the extension

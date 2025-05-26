@@ -5,6 +5,7 @@
 import type { RequestSignatures, TransportRequestMessage } from '@cennznet/extension-base/background/types';
 
 import handlers from '@cennznet/extension-base/background/handlers';
+import { withErrorLog } from '@cennznet/extension-base/background/handlers/Extension';
 import { PORT_CONTENT, PORT_EXTENSION } from '@cennznet/extension-base/defaults';
 import { AccountsStore } from '@cennznet/extension-base/stores';
 import chrome from '@cennznet/extension-inject/chrome';
@@ -12,7 +13,6 @@ import chrome from '@cennznet/extension-inject/chrome';
 import keyring from '@polkadot/ui-keyring';
 import { assert } from '@polkadot/util';
 import { cryptoWaitReady } from '@polkadot/util-crypto';
-import { withErrorLog } from "@cennznet/extension-base/background/handlers/Extension";
 
 // setup the notification (same a FF default background, white text)
 withErrorLog(() => chrome.action.setBadgeBackgroundColor({ color: '#d90000' }));
@@ -91,7 +91,6 @@ chrome.tabs.onActivated.addListener(() => {
 chrome.tabs.onRemoved.addListener(() => {
   getActiveTabs();
 });
-
 
 // initial setup
 cryptoWaitReady()

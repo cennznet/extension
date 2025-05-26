@@ -7,8 +7,7 @@ import styled from 'styled-components';
 
 import settings from '@polkadot/ui-settings';
 
-import {
-  ActionContext,
+import { ActionContext,
   ActionText,
   Checkbox,
   chooseTheme,
@@ -17,8 +16,7 @@ import {
   MenuDivider,
   MenuItem,
   Switch,
-  ThemeSwitchContext
-} from '../components';
+  ThemeSwitchContext } from '../components';
 import useIsPopup from '../hooks/useIsPopup';
 import useTranslation from '../hooks/useTranslation';
 import { windowOpen } from '../messaging';
@@ -80,7 +78,6 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
     },
     [setThemeContext]
   );
-
 
   const _goToAuthList = useCallback(
     () => {

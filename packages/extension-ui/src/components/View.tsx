@@ -29,9 +29,9 @@ function View ({ children, className }: Props): React.ReactElement<Props> {
   return (
     <ThemeSwitchContext.Provider value={setGlobalTheme}>
       <BodyTheme />
-        <Main className={className}>
-          {children}
-        </Main>
+      <Main className={className}>
+        {children}
+      </Main>
     </ThemeSwitchContext.Provider>
   );
 }

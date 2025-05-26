@@ -37,12 +37,13 @@ chrome.storage.local.get.returns(
             authorizedAccounts: ['5FbSap4BsWfjyRhCchoVdZHkDnmDm3NEgLZ25mesq4aw2WvX'],
             count: 0,
             id: '11',
-            origin: 'example.com',
             isAllowed: true,
+            origin: 'example.com',
             url: 'http://localhost:3000'
           }
         })
       };
+
       resolve(result);
     } catch (error) {
       reject(error);
@@ -57,7 +58,6 @@ chrome.storage.local.set.returns(
       reject(error);
     }
   }));
-
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-member-access
 (window as any).chrome = (globalThis as any).chrome = chrome;

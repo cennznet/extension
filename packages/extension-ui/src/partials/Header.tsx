@@ -1,19 +1,19 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
+import { getConnectedTabsUrl } from '@cennznet/extension-ui/messaging';
 import { faArrowLeft, faCog, faPlusCircle, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import styled from 'styled-components';
 
 import logo from '../assets/cennz.svg';
-import Link from '../components/Link';
 import InputFilter from '../components/InputFilter';
+import Link from '../components/Link';
 import useOutsideClick from '../hooks/useOutsideClick';
+import useTranslation from '../hooks/useTranslation';
 import MenuAdd from './MenuAdd';
 import MenuSettings from './MenuSettings';
-import useTranslation from '../hooks/useTranslation';
-import { getConnectedTabsUrl } from "@cennznet/extension-ui/messaging";
 
 interface Props {
   children?: React.ReactNode;
