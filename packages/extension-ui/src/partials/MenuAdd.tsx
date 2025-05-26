@@ -123,19 +123,19 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
 
 export default React.memo(styled(MenuAdd)<Props>`
   margin-top: 50px;
-  right: 50px; // 24 + 18 + 8
+  right: 50px;
   user-select: none;
 
   .menuItem {
+    span {
+      vertical-align: middle;
+    }
+
     span:first-child {
       height: 20px;
       margin-right: 8px;
       opacity: 0.5;
       width: 20px;
-    }
-
-    span {
-      vertical-align: middle;
     }
 
     .svg-inline--fa {

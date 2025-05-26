@@ -44,16 +44,6 @@ export default styled(Switch)<Props>`
     margin: 8px;
   }
 
-  .checkbox {
-    opacity: 0;
-    width: 0;
-    height: 0;
-
-    &:checked + .slider:before {
-      transform: translateX(24px);
-    }
-  }
-
   .slider {
     position: absolute;
     cursor: pointer;
@@ -78,4 +68,15 @@ export default styled(Switch)<Props>`
       border-radius: 50%;
     }
   }
+
+  .checkbox {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .slider:before {
+      transform: translateX(24px);
+    }
+  }
+
 `;

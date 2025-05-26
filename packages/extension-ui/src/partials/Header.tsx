@@ -246,6 +246,14 @@ export default React.memo(styled(Header)<Props>`
       }
     }
 
+    .plusIcon, .cogIcon, .searchIcon {
+      color: var(--iconNeutralColor);
+
+      &.selected {
+        color: var(--primaryColor);
+      }
+    }
+
     .searchBarWrapper {
       flex: 1;
       display: flex;
@@ -280,14 +288,6 @@ export default React.memo(styled(Header)<Props>`
 
     .popupToggle+.popupToggle {
       margin-left: 8px;
-    }
-  }
-
-  .plusIcon, .cogIcon, .searchIcon {
-    color: var(--iconNeutralColor);
-
-    &.selected {
-      color: var(--primaryColor);
     }
   }
 

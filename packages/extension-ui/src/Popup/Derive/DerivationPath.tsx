@@ -82,17 +82,18 @@ export default React.memo(styled(DerivationPath)<Props>`
     padding: 3px;
     width: 11px;
 
-    &:not(:disabled):hover {
-      background: none;
+    &::-moz-focus-inner {
+      border: 0;
     }
 
     &:active, &:focus {
       outline: none;
     }
 
-    &::-moz-focus-inner {
-      border: 0;
+    &:not(:disabled):hover {
+      background: none;
     }
+
   }
 
   .lockIcon {
