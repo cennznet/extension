@@ -60,7 +60,8 @@ function Upload ({ className }: Props): React.ReactElement {
         setFile(json);
       } catch (e) {
         console.error(e);
-        if (!(e as Error).toString().includes('Extension context invalidated') ) {
+
+        if (!(e as Error).toString().includes('Extension context invalidated')) {
           setFileError(true);
         }
       }
