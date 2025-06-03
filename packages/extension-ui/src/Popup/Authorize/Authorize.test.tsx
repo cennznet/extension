@@ -1,16 +1,15 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import '../../../../../__mocks__/chrome';
+import '../../../../mocks/chrome';
 
 import type { AuthorizeRequest } from '@cennznet/extension-base/background/types';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount, ReactWrapper } from 'enzyme';
 import React from 'react';
-import { ThemeProvider } from 'styled-components';
 
-import { AuthorizeReqContext, Icon, themes } from '../../components';
+import { AuthorizeReqContext, Icon } from '../../components';
 import { Header } from '../../partials';
 import Request from './Request';
 import Authorize from '.';
@@ -22,9 +21,7 @@ describe('Authorize', () => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   const mountAuthorize = (authorizeRequests: AuthorizeRequest[] = []): ReactWrapper => mount(
     <AuthorizeReqContext.Provider value={authorizeRequests}>
-      <ThemeProvider theme={themes.dark}>
-        <Authorize />
-      </ThemeProvider>
+      <Authorize />
     </AuthorizeReqContext.Provider>);
 
   it('render component', () => {

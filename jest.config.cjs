@@ -10,7 +10,8 @@ module.exports = {
     // eslint-disable-next-line sort-keys
     '@cennznet/extension(.*)$': '<rootDir>/packages/extension/src/$1',
     '\\.(css|less)$': 'empty/object',
-    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/__mocks__/fileMock.js'
+    '\\.(jpg|jpeg|png|gif|eot|otf|webp|svg|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': '<rootDir>/packages/mocks/fileMock.js',
+    '^@ledgerhq/devices(.*)$': '<rootDir>/node_modules/@ledgerhq/devices/lib$1'
   },
   modulePathIgnorePatterns: [
     '<rootDir>/packages/extension/build',

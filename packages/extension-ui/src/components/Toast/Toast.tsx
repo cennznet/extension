@@ -1,14 +1,13 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../../types';
-
 import React from 'react';
 import styled from 'styled-components';
 
 interface Props {
   content: React.ReactChild;
   className?: string;
+  visible?: boolean;
 }
 
 function Toast ({ className, content }: Props): React.ReactElement<Props> {
@@ -19,7 +18,7 @@ function Toast ({ className, content }: Props): React.ReactElement<Props> {
   );
 }
 
-export default styled(Toast)<{visible: boolean}>`
+export default styled(Toast)<Props>`
   position: fixed;
   display: ${({ visible }): string => visible ? 'block' : 'none'};
   height: 40px;
@@ -31,6 +30,6 @@ export default styled(Toast)<{visible: boolean}>`
   && {
     margin: auto;
     border-radius: 25px;
-    background: ${({ theme }: ThemeProps): string => theme.highlightedAreaBackground};
+    background: var(--highlightedAreaBackground);
   }
 `;

@@ -150,6 +150,7 @@ export default class Tabs {
       tabs
         .map(({ id }) => id)
         .filter((id): id is number => isNumber(id))
+        // eslint-disable-next-line @typescript-eslint/no-misused-promises
         .forEach((id) => chrome.tabs.update(id, { url }));
     });
   }
@@ -196,6 +197,9 @@ export default class Tabs {
 
       case 'pub(metadata.provide)':
         return this.metadataProvide(url, request as MetadataDef);
+
+      case 'pub(ping)':
+        return Promise.resolve(true);
 
       case 'pub(rpc.listProviders)':
         return this.rpcListProviders();

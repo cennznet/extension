@@ -55,11 +55,15 @@ function Upload ({ className }: Props): React.ReactElement {
       let json: KeyringPair$Json | KeyringPairs$Json | undefined;
 
       try {
+        setFileError(false);
         json = JSON.parse(u8aToString(file)) as KeyringPair$Json | KeyringPairs$Json;
         setFile(json);
       } catch (e) {
         console.error(e);
-        setFileError(true);
+
+        if (!(e as Error).toString().includes('Extension context invalidated')) {
+          setFileError(true);
+        }
       }
 
       if (json === undefined) {

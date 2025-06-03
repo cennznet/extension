@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import { faUsb } from '@fortawesome/free-brands-svg-icons';
 import { faCodeBranch, faFileExport, faFileUpload, faKey, faPlusCircle, faQrcode } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -15,7 +13,7 @@ import { useLedger } from '../hooks/useLedger';
 import useTranslation from '../hooks/useTranslation';
 import { windowOpen } from '../messaging';
 
-interface Props extends ThemeProps {
+interface Props {
   className?: string;
   reference: React.MutableRefObject<null>;
 }
@@ -123,12 +121,16 @@ function MenuAdd ({ className, reference }: Props): React.ReactElement<Props> {
   );
 }
 
-export default React.memo(styled(MenuAdd)(({ theme }: Props) => `
+export default React.memo(styled(MenuAdd)<Props>`
   margin-top: 50px;
-  right: 50px; // 24 + 18 + 8
+  right: 50px;
   user-select: none;
 
   .menuItem {
+    span {
+      vertical-align: middle;
+    }
+
     span:first-child {
       height: 20px;
       margin-right: 8px;
@@ -136,14 +138,10 @@ export default React.memo(styled(MenuAdd)(({ theme }: Props) => `
       width: 20px;
     }
 
-    span {
-      vertical-align: middle;
-    }
-
     .svg-inline--fa {
-      color: ${theme.iconNeutralColor};
+      color: var(--iconNeutralColor);
       margin-right: 0.3rem;
       width: 0.875em;
     }
   }
-`));
+`);

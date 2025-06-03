@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React, { useContext } from 'react';
 import styled from 'styled-components';
 
@@ -10,7 +8,7 @@ import { ActionContext, Box, Button, ButtonArea, List, VerticalSpace } from '../
 import useTranslation from '../hooks/useTranslation';
 import { Header } from '../partials';
 
-interface Props extends ThemeProps {
+interface Props {
   className?: string;
 }
 
@@ -45,10 +43,10 @@ const Welcome = function ({ className }: Props): React.ReactElement<Props> {
   );
 };
 
-export default styled(Welcome)(({ theme }: Props) => `
+export default styled(Welcome)<Props>`
   p {
-    color: ${theme.subTextColor};
+    color: var(--subTextColor);
     margin-bottom: 6px;
     margin-top: 0;
   }
-`);
+`;

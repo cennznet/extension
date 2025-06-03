@@ -5,7 +5,6 @@ import type { AccountJson } from '@cennznet/extension-base/background/types';
 
 import { canDerive } from '@cennznet/extension-base/utils';
 import defaultConfig from '@cennznet/extension-chains/config';
-import { ThemeProps } from '@cennznet/extension-ui/types';
 import React, { useCallback, useMemo, useState } from 'react';
 import styled from 'styled-components';
 
@@ -142,7 +141,7 @@ function Account ({ address, className, genesisHash, isExternal, isHardware, isH
   );
 }
 
-export default styled(Account)(({ theme }: ThemeProps) => `
+export default styled(Account)<Props>`
   .address {
     margin-bottom: 8px;
   }
@@ -155,7 +154,7 @@ export default styled(Account)(({ theme }: ThemeProps) => `
     width: 350px;
 
     .danger {
-      background-color: ${theme.bodyColor};
+      background-color: var(--bodyColor);
       margin-top: -13px;
       width: 330px;
     }
@@ -183,4 +182,4 @@ export default styled(Account)(({ theme }: ThemeProps) => `
       margin: 0;
     }
   }
-`);
+`;

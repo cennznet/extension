@@ -9,6 +9,7 @@ import type { KeypairType } from '@polkadot/util-crypto/types';
 // eslint-disable-next-line no-undef
 type This = typeof globalThis;
 
+export type HexString = `0x${string}`;
 export type Unsubcall = () => void;
 
 export interface InjectedAccount {
@@ -25,6 +26,7 @@ export interface InjectedAccountWithMeta {
     name?: string;
     source: string;
   };
+  type?: KeypairType;
 }
 
 export interface InjectedAccounts {
@@ -54,6 +56,7 @@ export interface MetadataDefBase {
   genesisHash: string;
   icon: string;
   ss58Format: number;
+  chainType?: 'substrate' | 'ethereum'
 }
 
 export interface MetadataDef extends MetadataDefBase {
@@ -63,6 +66,7 @@ export interface MetadataDef extends MetadataDefBase {
   tokenSymbol: string;
   types: Record<string, Record<string, string> | string>;
   metaCalls?: string;
+  rawMetadata?: HexString;
   userExtensions?: ExtDef;
 }
 
@@ -97,8 +101,9 @@ export interface Injected {
 }
 
 export interface InjectedWindowProvider {
-  enable: (origin: string) => Promise<Injected>;
-  version: string;
+  connect?: (origin: string) => Promise<InjectedExtension>;
+  enable?: (origin: string) => Promise<Injected>;
+  version?: string;
 }
 
 export interface InjectedWindow extends This {
@@ -110,5 +115,8 @@ export type InjectedExtension = InjectedExtensionInfo & Injected;
 export type InjectOptions = InjectedExtensionInfo;
 
 export interface Web3AccountsOptions {
-  ss58Format?: number
+  accountType?: KeypairType[];
+  extensions?: string[];
+  genesisHash?: string | null;
+  ss58Format?: number;
 }

@@ -1,15 +1,22 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { Theme, ThemeProps } from '../types';
-
 import { faExpand, faTasks } from '@fortawesome/free-solid-svg-icons';
 import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import styled, { ThemeContext } from 'styled-components';
+import styled from 'styled-components';
 
 import settings from '@polkadot/ui-settings';
 
-import { ActionContext, ActionText, Checkbox, Dropdown, Menu, MenuDivider, MenuItem, Svg, Switch, themes, ThemeSwitchContext } from '../components';
+import { ActionContext,
+  ActionText,
+  Checkbox,
+  chooseTheme,
+  Dropdown,
+  Menu,
+  MenuDivider,
+  MenuItem,
+  Switch,
+  ThemeSwitchContext } from '../components';
 import useIsPopup from '../hooks/useIsPopup';
 import useTranslation from '../hooks/useTranslation';
 import { windowOpen } from '../messaging';
@@ -20,7 +27,7 @@ interface Option {
   value: string;
 }
 
-interface Props extends ThemeProps {
+interface Props {
   className?: string;
   reference: React.MutableRefObject<null>;
 }
@@ -32,8 +39,8 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
   const { t } = useTranslation();
   const [camera, setCamera] = useState(settings.camera === 'on');
   const [prefix, setPrefix] = useState(`${settings.prefix === -1 ? 42 : settings.prefix}`);
-  const themeContext = useContext<Theme>(ThemeContext);
-  const setTheme = useContext(ThemeSwitchContext);
+  const [theme, setTheme] = useState(chooseTheme());
+  const setThemeContext = useContext(ThemeSwitchContext);
   const isPopup = useIsPopup();
   const languageOptions = useMemo(() => getLanguageOptions(), []);
   const onAction = useContext(ActionContext);
@@ -50,11 +57,6 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
     []
   );
 
-  const _onChangeTheme = useCallback(
-    (checked: boolean): void => setTheme(checked ? 'dark' : 'light'),
-    [setTheme]
-  );
-
   const _onWindowOpen = useCallback(
     () => windowOpen('/'),
     []
@@ -65,6 +67,16 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
       settings.set({ i18nLang: value });
     },
     []
+  );
+
+  const _onSetTheme = useCallback(
+    (checked: boolean): void => {
+      const theme = checked ? 'dark' : 'light';
+
+      setThemeContext(theme);
+      setTheme(theme);
+    },
+    [setThemeContext]
   );
 
   const _goToAuthList = useCallback(
@@ -83,9 +95,9 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
         title='Theme'
       >
         <Switch
-          checked={themeContext.id === themes.dark.id}
+          checked={theme === 'dark'}
           checkedLabel={t<string>('Dark')}
-          onChange={_onChangeTheme}
+          onChange={_onSetTheme}
           uncheckedLabel={t<string>('Light')}
         />
       </MenuItem>
@@ -153,22 +165,22 @@ function MenuSettings ({ className, reference }: Props): React.ReactElement<Prop
   );
 }
 
-export default React.memo(styled(MenuSettings)(({ theme }: Props) => `
+export default React.memo(styled(MenuSettings)<Props>`
   margin-top: 50px;
   right: 24px;
   user-select: none;
 
   .openWindow, .manageWebsiteAccess{
     span {
-      color: ${theme.textColor};
-      font-size: ${theme.fontSize};
-      line-height: ${theme.lineHeight};
+      color: var(--textColor);
+      font-size: var(--fontSize);
+      line-height: var(--lineHeight);
       text-decoration: none;
       vertical-align: middle;
     }
 
-    ${Svg} {
-      background: ${theme.textColor};
+    .Comp--Svg {
+      background: var(--textColor);
       height: 20px;
       top: 4px;
       width: 20px;
@@ -177,7 +189,7 @@ export default React.memo(styled(MenuSettings)(({ theme }: Props) => `
 
   > .setting {
     > .checkbox {
-      color: ${theme.textColor};
+      color: var(--textColor);
       line-height: 20px;
       font-size: 15px;
       margin-bottom: 0;
@@ -187,16 +199,16 @@ export default React.memo(styled(MenuSettings)(({ theme }: Props) => `
       }
 
       label {
-        color: ${theme.textColor};
+        color: var(--textColor);
       }
     }
 
     > .dropdown {
-      background: ${theme.background};
+      background: var(--background);
       margin-bottom: 0;
       margin-top: 9px;
       margin-right: 0;
       width: 100%;
     }
   }
-`));
+`);

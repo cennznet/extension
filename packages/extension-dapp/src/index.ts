@@ -1,13 +1,20 @@
 // Copyright 2019-2021 @polkadot/extension-dapp authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { Injected, InjectedAccount, InjectedAccountWithMeta, InjectedExtension, InjectedExtensionInfo, InjectedProviderWithMeta, InjectedWindow, ProviderList, Unsubcall, Web3AccountsOptions } from '@cennznet/extension-inject/types';
+import type { InjectedAccount, InjectedAccountWithMeta, InjectedExtension, InjectedProviderWithMeta, InjectedWindow, ProviderList, Unsubcall, Web3AccountsOptions } from '@cennznet/extension-inject/types';
 
 import { u8aEq } from '@polkadot/util';
 import { decodeAddress, encodeAddress } from '@polkadot/util-crypto';
 
 import { documentReadyPromise } from './util';
 
+export function isOnObject <T> (...fns: (keyof T)[]): (value?: unknown) => value is T {
+  return (value?: unknown): value is T =>
+    isObject(value) &&
+    fns.every((f) => isFunction((value as T)[f]));
+}
+
+export const isPromise = /* #__PURE__ */ isOnObject<Promise<unknown>>('catch', 'then');
 // just a helper (otherwise we cast all-over, so shorter and more readable)
 const win = window as Window & InjectedWindow;
 
@@ -16,7 +23,10 @@ win.injectedWeb3 = win.injectedWeb3 || {};
 
 // true when anything has been injected and is available
 function web3IsInjected (): boolean {
-  return Object.keys(win.injectedWeb3).length !== 0;
+  return Object
+    .values(win.injectedWeb3)
+    .filter(({ connect, enable }) => !!(connect || enable))
+    .length !== 0;
 }
 
 // helper to throw a consistent error when not enabled
@@ -36,6 +46,14 @@ function mapAccounts (source: string, list: InjectedAccount[], ss58Format?: numb
   });
 }
 
+/** @internal filter accounts based on genesisHash and type of account */
+function filterAccounts (list: InjectedAccount[], genesisHash?: string | null, type?: string[]): InjectedAccount[] {
+  return list.filter((a) =>
+    (!a.type || !type || type.includes(a.type)) &&
+    (!a.genesisHash || !genesisHash || a.genesisHash === genesisHash)
+  );
+}
+
 // have we found a properly constructed window.injectedWeb3
 let isWeb3Injected = web3IsInjected();
 
@@ -44,116 +62,157 @@ let web3EnablePromise: Promise<InjectedExtension[]> | null = null;
 
 export { isWeb3Injected, web3EnablePromise };
 
-function getWindowExtensions (originName: string): Promise<[InjectedExtensionInfo, Injected | void][]> {
-  return Promise.all(
-    Object.entries(win.injectedWeb3).map(([name, { enable, version }]): Promise<[InjectedExtensionInfo, Injected | void]> =>
-      Promise.all([
-        Promise.resolve({ name, version }),
-        enable(originName).catch((error: Error): void => {
-          console.error(`Error initializing ${name}: ${error.message}`);
-        })
-      ])
+function getWindowExtensions (originName: string): Promise<InjectedExtension[]> {
+  return Promise
+    .all(
+      Object
+        .entries(win.injectedWeb3)
+        .map(([nameOrHash, { connect, enable, version }]): Promise<(InjectedExtension | void)> =>
+          Promise
+            .resolve()
+            .then(() =>
+              connect
+                // new style, returning all info
+                ? connect(originName)
+                : enable
+                  // previous interface, leakages on name/version
+                  ? enable(originName).then((e) =>
+                    objectSpread<InjectedExtension>({ name: nameOrHash, version: version || 'unknown' }, e)
+                  )
+                  : Promise.reject(new Error('No connect(..) or enable(...) hook found'))
+            )
+            .catch(({ message }: Error): void => {
+              console.error(`Error initializing ${nameOrHash}: ${message}`);
+            })
+        )
     )
+    .then((exts) => exts.filter((e: any): e is InjectedExtension => !!e));
+}
+
+/** @internal Ensure the enable promise is resolved and filter by extensions */
+async function filterEnable (caller: 'web3Accounts' | 'web3AccountsSubscribe', extensions?: string[]): Promise<InjectedExtension[]> {
+  if (!web3EnablePromise) {
+    return throwError(caller);
+  }
+
+  const sources = await web3EnablePromise;
+
+  return sources.filter(({ name }) =>
+    !extensions ||
+    extensions.includes(name)
   );
 }
 
 // enables all the providers found on the injected window interface
-export function web3Enable (originName: string): Promise<InjectedExtension[]> {
+export function web3Enable (originName: string, compatInits: (() => Promise<boolean>)[] = []): Promise<InjectedExtension[]> {
   if (!originName) {
     throw new Error('You must pass a name for your app to the web3Enable function');
   }
 
-  web3EnablePromise = documentReadyPromise((): Promise<InjectedExtension[]> =>
-    getWindowExtensions(originName)
-      .then((values): InjectedExtension[] =>
-        values
-          .filter((value): value is [InjectedExtensionInfo, Injected] => !!value[1])
-          .map(([info, ext]): InjectedExtension => {
-            // if we don't have an accounts subscriber, add a single-shot version
-            if (!ext.accounts.subscribe) {
-              ext.accounts.subscribe = (cb: (accounts: InjectedAccount[]) => void | Promise<void>): Unsubcall => {
-                ext.accounts.get().then(cb).catch(console.error);
+  const initCompat = compatInits.length
+    ? Promise.all(compatInits.map((c) => c().catch(() => false)))
+    : Promise.resolve([true]);
 
-                return (): void => {
-                  // no unsubscribe needed, this is a single-shot
+  web3EnablePromise = documentReadyPromise(
+    (): Promise<InjectedExtension[]> =>
+      initCompat.then(() =>
+        getWindowExtensions(originName)
+          .then((values): InjectedExtension[] =>
+            values.map((e): InjectedExtension => {
+              // if we don't have an accounts subscriber, add a single-shot version
+              if (!e.accounts.subscribe) {
+                e.accounts.subscribe = (cb: (accounts: InjectedAccount[]) => void | Promise<void>): Unsubcall => {
+                  e.accounts
+                    .get()
+                    .then(cb)
+                    .catch(console.error);
+
+                  return (): void => {
+                    // no ubsubscribe needed, this is a single-shot
+                  };
                 };
-              };
-            }
+              }
 
-            return { ...info, ...ext };
+              return e;
+            })
+          )
+          .catch((): InjectedExtension[] => [])
+          .then((values): InjectedExtension[] => {
+            const names = values.map(({ name, version }): string => `${name}/${version}`);
+
+            isWeb3Injected = web3IsInjected();
+            console.info(`web3Enable: Enabled ${values.length} extension${values.length !== 1 ? 's' : ''}: ${names.join(', ')}`);
+
+            return values;
           })
       )
-      .catch((): InjectedExtension[] => [])
-      .then((values): InjectedExtension[] => {
-        const names = values.map(({ name, version }): string => `${name}/${version}`);
-
-        isWeb3Injected = web3IsInjected();
-        console.log(`web3Enable: Enabled ${values.length} extension${values.length !== 1 ? 's' : ''}: ${names.join(', ')}`);
-
-        return values;
-      })
   );
 
   return web3EnablePromise;
 }
 
 // retrieve all the accounts across all providers
-export async function web3Accounts ({ ss58Format }: Web3AccountsOptions = {}): Promise<InjectedAccountWithMeta[]> {
+export async function web3Accounts ({ accountType, extensions, genesisHash, ss58Format }: Web3AccountsOptions = {}): Promise<InjectedAccountWithMeta[]> {
   if (!web3EnablePromise) {
     return throwError('web3Accounts');
   }
 
   const accounts: InjectedAccountWithMeta[] = [];
-  const injected = await web3EnablePromise;
+  const sources = await filterEnable('web3Accounts', extensions);
   const retrieved = await Promise.all(
-    injected.map(async ({ accounts, name: source }): Promise<InjectedAccountWithMeta[]> => {
+    sources.map(async ({ accounts, name: source }): Promise<InjectedAccountWithMeta[]> => {
       try {
         const list = await accounts.get();
 
-        return mapAccounts(source, list, ss58Format);
-      } catch (error) {
-        console.error('web3accounts failed:', error);
-
+        return mapAccounts(source, filterAccounts(list, genesisHash, accountType), ss58Format);
+      } catch {
         // cannot handle this one
         return [];
       }
     })
   );
 
-  retrieved.forEach((result): void => {
+  retrieved.forEach((result: any): void => {
     accounts.push(...result);
   });
 
-  const addresses = accounts.map(({ address }): string => address);
-
-  console.log(`web3Accounts: Found ${accounts.length} address${accounts.length !== 1 ? 'es' : ''}: ${addresses.join(', ')}`);
+  console.info(`web3Accounts: Found ${accounts.length} address${accounts.length !== 1 ? 'es' : ''}`);
 
   return accounts;
 }
 
-export async function web3AccountsSubscribe (cb: (accounts: InjectedAccountWithMeta[]) => void | Promise<void>, { ss58Format }: Web3AccountsOptions = {}): Promise<Unsubcall> {
+export async function web3AccountsSubscribe (cb: (accounts: InjectedAccountWithMeta[]) => void | Promise<void>, { accountType, extensions, genesisHash, ss58Format }: Web3AccountsOptions = {}): Promise<Unsubcall> {
   if (!web3EnablePromise) {
     return throwError('web3AccountsSubscribe');
   }
 
+  const sources = await filterEnable('web3AccountsSubscribe', extensions);
   const accounts: Record<string, InjectedAccount[]> = {};
 
-  const triggerUpdate = (): void | Promise<void> => cb(
-    Object
-      .entries(accounts)
-      .reduce((result: InjectedAccountWithMeta[], [source, list]): InjectedAccountWithMeta[] => {
-        result.push(...mapAccounts(source, list, ss58Format));
+  const triggerUpdate = (): void | Promise<void> =>
+    cb(
+      Object
+        .entries(accounts)
+        .reduce((result: InjectedAccountWithMeta[], [source, list]): InjectedAccountWithMeta[] => {
+          result.push(...mapAccounts(source, filterAccounts(list, genesisHash, accountType), ss58Format));
 
-        return result;
-      }, [])
-  );
+          return result;
+        }, [])
+    );
 
-  const unsubs = (await web3EnablePromise).map(({ accounts: { subscribe }, name: source }): Unsubcall =>
+  const unsubs = sources.map(({ accounts: { subscribe }, name: source }): Unsubcall =>
     subscribe((result): void => {
       accounts[source] = result;
 
-      // eslint-disable-next-line @typescript-eslint/no-floating-promises
-      triggerUpdate();
+      try {
+        const result = triggerUpdate();
+
+        if (result && isPromise(result)) {
+          result.catch(console.error);
+        }
+      } catch (error) {
+        console.error(error);
+      }
     })
   );
 
@@ -226,4 +285,83 @@ export async function web3UseRpcProvider (source: string, key: string): Promise<
   const meta = await provider.startProvider(key);
 
   return { meta, provider };
+}
+
+/**
+ * @name objectSpread
+ * @summary Concats all sources into the destination
+ * @description Spreads object properties while maintaining object integrity
+ */
+/* eslint-disable @typescript-eslint/ban-types */
+export function objectSpread <T extends object> (dest: object, ...sources: (object | undefined | null)[]): T {
+  const filterProps = new Set(['__proto__', 'constructor', 'prototype']);
+
+  for (let i = 0, count = sources.length; i < count; i++) {
+    const src = sources[i];
+
+    if (src) {
+      if (typeof (src as Map<string, unknown>).entries === 'function') {
+        for (const [key, value] of (src as Map<string, unknown>).entries()) {
+          if (!filterProps.has(key)) {
+            (dest as Record<string, unknown>)[key] = value;
+          }
+        }
+      } else {
+        // Create a clean copy of the source object
+        const sanitizedSrc = Object.create(null) as Record<string, unknown>;
+
+        for (const [key, value] of Object.entries(src)) {
+          if (!filterProps.has(key)) {
+            sanitizedSrc[key] = value;
+          }
+        }
+
+        Object.assign(dest, sanitizedSrc);
+      }
+    }
+  }
+
+  return dest as T;
+}
+
+type FnType = Function;
+
+/**
+ * @name isFunction
+ * @summary Tests for a `function`.
+ * @description
+ * Checks to see if the input value is a JavaScript function.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isFunction } from '@polkadot/util';
+ *
+ * isFunction(() => false); // => true
+ * ```
+ */
+export function isFunction (value: unknown): value is FnType {
+  return typeof value === 'function';
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+type ObjectIndexed = Record<string, any>;
+
+/**
+ * @name isObject
+ * @summary Tests for an `object`.
+ * @description
+ * Checks to see if the input value is a JavaScript object.
+ * @example
+ * <BR>
+ *
+ * ```javascript
+ * import { isObject } from '@polkadot/util';
+ *
+ * isObject({}); // => true
+ * isObject('something'); // => false
+ * ```
+ */
+export function isObject <T extends ObjectIndexed = ObjectIndexed> (value?: unknown): value is T {
+  return !!value && typeof value === 'object';
 }

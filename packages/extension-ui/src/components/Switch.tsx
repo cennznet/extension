@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React, { useCallback } from 'react';
 import styled from 'styled-components';
 
@@ -37,13 +35,38 @@ function Switch ({ checked, checkedLabel, className, onChange, uncheckedLabel }:
   );
 }
 
-export default styled(Switch)(({ theme }: ThemeProps) => `
+export default styled(Switch)<Props>`
   label {
     position: relative;
     display: inline-block;
     width: 48px;
     height: 24px;
     margin: 8px;
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: var(--readonlyInputBackground);
+    transition: 0.2s;
+    border-radius: 100px;
+    border: 1px solid var(--inputBorderColor);
+
+    &:before {
+      position: absolute;
+      content: '';
+      height: 16px;
+      width: 16px;
+      left: 4px;
+      bottom: 3px;
+      background-color: var(--primaryColor);
+      transition: 0.4s;
+      border-radius: 50%;
+    }
   }
 
   .checkbox {
@@ -56,28 +79,4 @@ export default styled(Switch)(({ theme }: ThemeProps) => `
     }
   }
 
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: ${theme.readonlyInputBackground};
-    transition: 0.2s;
-    border-radius: 100px;
-    border: 1px solid ${theme.inputBorderColor};
-
-    &:before {
-      position: absolute;
-      content: '';
-      height: 16px;
-      width: 16px;
-      left: 4px;
-      bottom: 3px;
-      background-color: ${theme.primaryColor};
-      transition: 0.4s;
-      border-radius: 50%;
-    }
-  }
-`);
+`;

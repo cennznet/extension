@@ -1,43 +1,44 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
-import React, { useState } from 'react';
-import { createGlobalStyle, ThemeProvider } from 'styled-components';
+import React, { useEffect } from 'react';
+import { createGlobalStyle } from 'styled-components';
 
 // FIXME We should not import from index when this one is imported there as well
-import { AvailableThemes, chooseTheme, Main, themes, ThemeSwitchContext } from '.';
+import { chooseTheme, Main, ThemeSwitchContext } from '.';
 
 interface Props {
   children: React.ReactNode;
   className?: string;
 }
 
-function View ({ children, className }: Props): React.ReactElement<Props> {
-  const [theme, setTheme] = useState(chooseTheme());
-  const _theme = themes[theme];
+function setGlobalTheme (theme: string): void {
+  const _theme = theme === 'dark'
+    ? 'dark'
+    : 'light';
 
-  const switchTheme = (theme: AvailableThemes): void => {
-    localStorage.setItem('theme', theme);
-    setTheme(theme);
-  };
+  localStorage.setItem('theme', _theme);
+  document?.documentElement?.setAttribute('data-theme', _theme);
+}
+
+function View ({ children, className }: Props): React.ReactElement<Props> {
+  useEffect((): void => {
+    setGlobalTheme(chooseTheme());
+  }, []);
 
   return (
-    <ThemeSwitchContext.Provider value={switchTheme}>
-      <ThemeProvider theme={_theme}>
-        <BodyTheme theme={_theme} />
-        <Main className={className}>
-          {children}
-        </Main>
-      </ThemeProvider>
+    <ThemeSwitchContext.Provider value={setGlobalTheme}>
+      <BodyTheme />
+      <Main className={className}>
+        {children}
+      </Main>
     </ThemeSwitchContext.Provider>
   );
 }
 
-const BodyTheme = createGlobalStyle<ThemeProps>`
+const BodyTheme = createGlobalStyle`
   body {
-    background-color: ${({ theme }: ThemeProps): string => theme.bodyColor};
+    background-color: var(--bodyColor);
   }
 
   html {

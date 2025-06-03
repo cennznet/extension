@@ -21,6 +21,7 @@ import type { AccountJson,
   RequestAccountShow,
   RequestAccountTie,
   RequestAccountValidate,
+  RequestActiveTabsUrlUpdate,
   RequestAuthorizeApprove,
   RequestAuthorizeReject,
   RequestBatchRestore,
@@ -487,7 +488,7 @@ export default class Extension {
   }
 
   private windowOpen (path: AllowedPath): boolean {
-    const url = `${chrome.extension.getURL('index.html')}#${path}`;
+    const url = `${chrome.runtime.getURL('index.html')}#${path}`;
 
     if (!ALLOWED_PATH.includes(path)) {
       console.error('Not allowed to open the url:', url);
@@ -496,7 +497,7 @@ export default class Extension {
     }
 
     console.log('open', url);
-    chrome.tabs.create({ url });
+    withErrorLog(() => chrome.tabs.create({ url }));
 
     return true;
   }
@@ -526,6 +527,10 @@ export default class Extension {
     };
   }
 
+  private updateCurrentTabs ({ urls }: RequestActiveTabsUrlUpdate) {
+    this.#state.updateCurrentTabsUrl(urls);
+  }
+
   private derivationCreate ({ genesisHash, name, parentAddress, parentPassword, password, suri }: RequestDeriveCreate): boolean {
     const childPair = this.derive(parentAddress, suri, parentPassword, {
       genesisHash,
@@ -545,7 +550,7 @@ export default class Extension {
 
   // Weird thought, the eslint override is not needed in Tabs
   // eslint-disable-next-line @typescript-eslint/require-await
-  public async handle<TMessageType extends MessageTypes> (id: string, type: TMessageType, request: RequestTypes[TMessageType], port: chrome.runtime.Port): Promise<ResponseType<TMessageType>> {
+  public async handle<TMessageType extends MessageTypes> (id: string, type: TMessageType, request: RequestTypes[TMessageType], port: chrome.runtime.Port | undefined): Promise<ResponseType<TMessageType>> {
     switch (type) {
       case 'pri(authorize.approve)':
         return this.authorizeApprove(request as RequestAuthorizeApprove);
@@ -559,8 +564,9 @@ export default class Extension {
       case 'pri(authorize.toggle)':
         return this.toggleAuthorization(request as string);
 
-      case 'pri(authorize.requests)':
-        return this.authorizeSubscribe(id, port);
+      case 'pri(authorize.requests)': {
+        return port && this.authorizeSubscribe(id, port);
+      }
 
       case 'pri(accounts.create.external)':
         return this.accountsCreateExternal(request as RequestAccountCreateExternal);
@@ -590,7 +596,7 @@ export default class Extension {
         return this.accountsShow(request as RequestAccountShow);
 
       case 'pri(accounts.subscribe)':
-        return this.accountsSubscribe(id, port);
+        return port && this.accountsSubscribe(id, port);
 
       case 'pri(accounts.tie)':
         return this.accountsTie(request as RequestAccountTie);
@@ -614,7 +620,10 @@ export default class Extension {
         return this.metadataReject(request as RequestMetadataReject);
 
       case 'pri(metadata.requests)':
-        return this.metadataSubscribe(id, port);
+        return port && this.metadataSubscribe(id, port);
+
+      case 'pri(activeTabsUrl.update)':
+        return this.updateCurrentTabs(request as RequestActiveTabsUrlUpdate);
 
       case 'pri(derivation.create)':
         return this.derivationCreate(request as RequestDeriveCreate);
@@ -650,7 +659,7 @@ export default class Extension {
         return this.signingIsLocked(request as RequestSigningIsLocked);
 
       case 'pri(signing.requests)':
-        return this.signingSubscribe(id, port);
+        return port && this.signingSubscribe(id, port);
 
       case 'pri(window.open)':
         return this.windowOpen(request as AllowedPath);
@@ -658,5 +667,17 @@ export default class Extension {
       default:
         throw new Error(`Unable to handle message of type ${type}`);
     }
+  }
+}
+
+export function withErrorLog (fn: () => unknown): void {
+  try {
+    const p = fn();
+
+    if (p && typeof p === 'object' && typeof (p as Promise<unknown>).catch === 'function') {
+      (p as Promise<unknown>).catch(console.error);
+    }
+  } catch (e) {
+    console.error(e);
   }
 }

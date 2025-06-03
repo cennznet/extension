@@ -1,8 +1,6 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import type { ThemeProps } from '../types';
-
 import React from 'react';
 import styled from 'styled-components';
 
@@ -22,11 +20,11 @@ function Table ({ children, className = '', isFull }: Props): React.ReactElement
   );
 }
 
-export default React.memo(styled(Table)(({ theme }: ThemeProps) => `
+export default React.memo(styled(Table)<Props>`
   border: 0;
   display: block;
-  font-size: ${theme.labelFontSize};
-  line-height: ${theme.labelLineHeight};
+  font-size: var(--labelFontSize);
+  line-height: var(--labelLineHeight);
   margin-bottom: 1rem;
 
   &.isFull {
@@ -72,4 +70,4 @@ export default React.memo(styled(Table)(({ theme }: ThemeProps) => `
       white-space: normal;
     }
   }
-`));
+`);

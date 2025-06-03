@@ -1,16 +1,15 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import '../../../../__mocks__/chrome';
+import '../../../mocks/chrome';
 
 import Adapter from '@wojtekmaj/enzyme-adapter-react-17';
 import { configure, mount, ReactWrapper } from 'enzyme';
 import React from 'react';
 import { act } from 'react-dom/test-utils';
 import { MemoryRouter, Route } from 'react-router';
-import { ThemeProvider } from 'styled-components';
 
-import { Button, themes } from '../components';
+import { Button } from '../components';
 import * as messaging from '../messaging';
 import { flushAllPromises } from '../testHelpers';
 import Export from './Export';
@@ -32,9 +31,7 @@ describe('Export component', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     wrapper = mount(
       <MemoryRouter initialEntries={ [`/account/export/${VALID_ADDRESS}`] }>
-        <ThemeProvider theme={themes.dark}>
-          <Route path='/account/export/:address'><Export /></Route>
-        </ThemeProvider>
+        <Route path='/account/export/:address'><Export /></Route>
       </MemoryRouter>
     );
   });

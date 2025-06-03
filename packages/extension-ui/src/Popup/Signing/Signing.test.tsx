@@ -1,7 +1,7 @@
 // Copyright 2019-2021 @polkadot/extension-ui authors & contributors
 // SPDX-License-Identifier: Apache-2.0
 
-import '../../../../../__mocks__/chrome';
+import '../../../../mocks/chrome';
 
 import type { SigningRequest } from '@cennznet/extension-base/background/types';
 
@@ -10,9 +10,8 @@ import { configure, mount, ReactWrapper } from 'enzyme';
 import { EventEmitter } from 'events';
 import React, { useState } from 'react';
 import { act } from 'react-dom/test-utils';
-import { ThemeProvider } from 'styled-components';
 
-import { ActionContext, Address, Button, Input, SigningReqContext, themes } from '../../components';
+import { ActionContext, Address, Button, Input, SigningReqContext } from '../../components';
 import * as messaging from '../../messaging';
 import * as MetadataCache from '../../MetadataCache';
 import { flushAllPromises } from '../../testHelpers';
@@ -49,9 +48,7 @@ describe('Signing requests', () => {
     // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
     wrapper = mount(
       <ActionContext.Provider value={onActionStub}>
-        <ThemeProvider theme={themes.dark}>
-          <MockRequestsProvider />
-        </ThemeProvider>
+        <MockRequestsProvider />
       </ActionContext.Provider>
     );
     await act(flushAllPromises);

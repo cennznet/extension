@@ -2,7 +2,6 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { RequestAuthorizeTab } from '@cennznet/extension-base/background/types';
-import type { ThemeProps } from '../../types';
 
 import React, { useCallback, useContext } from 'react';
 import { Trans } from 'react-i18next';
@@ -12,7 +11,7 @@ import { ActionBar, ActionContext, Button, Icon, Link, Warning } from '../../com
 import useTranslation from '../../hooks/useTranslation';
 import { approveAuthRequest, rejectAuthRequest } from '../../messaging';
 
-interface Props extends ThemeProps {
+interface Props {
   authId: string;
   className?: string;
   isFirst: boolean;
@@ -84,62 +83,37 @@ function Request ({ authId, className, isFirst, request: { origin }, url }: Prop
   );
 }
 
-export default styled(Request)(({ theme }: Props) => `
+export default styled(Request)<Props>`
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  overflow-y: auto;
 
-  .icon {
-    background: ${theme.buttonBackgroundDanger};
-    color: white;
-    min-width: 18px;
-    width: 14px;
-    height: 18px;
-    font-size: 10px;
-    line-height: 20px;
-    margin: 16px 15px 0 1.35rem;
-    font-weight: 800;
-    padding-left: 0.5px;
+  .footer {
+    padding: 1rem 1rem 0rem 1rem;
+    background: var(--background);
   }
 
-  .tab-info {
-    overflow: hidden;
-    margin: 0.75rem 20px 0 0;
-  }
-
-  .tab-name,
-  .tab-url {
-    color: ${theme.textColor};
-    display: inline-block;
-    max-width: 20rem;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    vertical-align: top;
-    cursor: pointer;
-    text-decoration: underline;
-  }
-
-  .requestInfo {
+  .buttonContainer {
     display: flex;
-    flex-direction: column;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+
+  .acceptButton, .rejectButton {
+    width: 48%;
+    height: 40px;
+  }
+
+  .dontAskAgainContainer {
+    display: flex;
     align-items: center;
-    margin-bottom: 8px;
-    background: ${theme.highlightedAreaBackground};
-  }
+    justify-content: center;
+    text-align: center;
 
-  .info {
-    display: flex;
-    flex-direction: row;
+    input {
+      margin-right: 0.5rem;
+    }
   }
-
-  .acceptButton {
-    width: 90%;
-    margin: 25px auto 0;
-  }
-
-  .warningMargin {
-    margin: 24px 24px 0 1.45rem;
-  }
-
-  .rejectionButton {
-    margin: 8px 0 15px 0;
-    text-decoration: underline;
-  }
-`);
+`;
