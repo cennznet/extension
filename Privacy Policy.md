@@ -3,7 +3,7 @@
 # Privacy Policy for CENNZnet Extension
 ![license](https://img.shields.io/badge/License-Apache%202.0-blue?logo=apache&style=flat-square)
 
-CENNZnet ("us", "we", or "our") operates the CENNZnet extension browser extension (the "Service").
+Futureverse Corporation Limited ("us", "we", or "our") operates the CENNZnet extension browser extension (the "Service").
 
 This page informs you that we do not collect any personal information while you use our Service. You can use our Service with the confidence that we do not collect, store, or share any of your personal information.
 
@@ -30,11 +30,9 @@ We take the security of our users' privacy very seriously. We have implemented t
 ## Changes to This Privacy Policy
 We may update our Privacy Policy from time to time. We will notify you of any changes by posting the new Privacy Policy on this page.
 
-We will let you know via email and/or a prominent notice on our Service, prior to the change becoming effective and update the "effective date" at the top of this Privacy Policy.
-
 You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
 
 ## Contact Us
-If you have any questions about this Privacy Policy, please contact us at [Twitter](https://x.com/futureverse), [Email](mailto:gplay-admin@futureverse.com), [Discord](https://discord.com/invite/futureverse).
+If you have any questions about this Privacy Policy, please contact us at [Twitter](https://x.com/futureverse), [Email](mailto:privacy@futureverse.com), [Discord](https://discord.com/invite/futureverse).
 
 
