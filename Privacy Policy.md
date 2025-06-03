@@ -33,6 +33,6 @@ We may update our Privacy Policy from time to time. We will notify you of any ch
 You are advised to review this Privacy Policy periodically for any changes. Changes to this Privacy Policy are effective when they are posted on this page.
 
 ## Contact Us
-If you have any questions about this Privacy Policy, please contact us at [Twitter](https://x.com/futureverse), [Email](mailto:privacy@futureverse.com), [Discord](https://discord.com/invite/futureverse).
+If you have any questions about this Privacy Policy, please contact us at [Email](mailto:privacy@futureverse.com).
 
 
